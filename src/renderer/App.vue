@@ -14,4 +14,8 @@
 body {
   font: 14px/1 'Fira Sans', sans-serif;
 }
+
+* {
+  box-sizing: border-box;
+}
 </style>

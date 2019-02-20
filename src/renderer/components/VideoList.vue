@@ -2,10 +2,11 @@
   <div class="video-list">
     <ul class="video-list__items">
       <li class="video-list__item"
-        v-for="(item, index) in videos"
-        v-on:click="selectVideo(item, index)"
-        :class="(index === activeVideoIndex ? 'active' : '')">
-        {{ item.name }}
+        v-for="(video, index) in videos"
+        v-on:click="selectVideo(video, index)"
+        :class="(index === activeVideoIndex ? 'active' : '')"
+        :title="video.meta.path">
+        {{ video.meta.name }}
       </li>
     </ul>
   </div>
@@ -20,8 +21,8 @@ export default {
   },
 
   methods: {
-    selectVideo (item, index) {
-      this.setActiveVideo(item, index)
+    selectVideo (video, index) {
+      this.setActiveVideo(video, index)
     }
   }
 }
@@ -29,6 +30,8 @@ export default {
 
 <style lang="scss">
 .video-list {
+  position: relative;
+
   &__items {
     margin: 0;
     padding: 0;
@@ -36,7 +39,12 @@ export default {
   }
 
   &__item {
+    position: relative;
+    overflow: hidden;
     padding: 6px 20px;
+    width: 100%;
+    text-overflow: ellipsis;
+    cursor: default;
 
     &.active {
       background: rgba(#000, 0.2);

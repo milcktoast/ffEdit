@@ -22,6 +22,7 @@ function createWindow () {
     titleBarStyle: 'hiddenInset',
     useContentSize: true,
     webPreferences: {
+      webSecurity: false,
       nodeIntegration: true
     }
   })

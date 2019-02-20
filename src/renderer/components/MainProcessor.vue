@@ -63,8 +63,15 @@ export default {
 
       let nextVideos = map.call(files, (file) => {
         let { name, path, size, type, lastModified } = file
-        return {
+
+        let element = this.createVideo(path)
+        let meta = {
           name, path, size, type, lastModified
+        }
+
+        return {
+          meta,
+          element
         }
       })
 
@@ -73,7 +80,13 @@ export default {
       this.videos.push(...nextVideos)
     },
 
-    setActiveVideo (item, index) {
+    createVideo (src) {
+      let video = document.createElement('video')
+      video.src = `file://${src}`
+      return video
+    },
+
+    setActiveVideo (video, index) {
       this.activeVideoIndex = index
     }
   }
@@ -86,6 +99,7 @@ export default {
   top: 0;
   left: 0;
 
+  overflow: hidden;
   display: flex;
   width: 100%;
   height: 100%;
