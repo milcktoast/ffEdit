@@ -6,7 +6,8 @@
         <div v-if="isVideoLoaded">
           <video class="video-editor__viewer__element"
             :src="video.element.src" :muted="muted" />
-          <bounds-editor :bounds="video.bounds" :viewSize="viewerSize" />
+          <bounds-editor :bounds="video.bounds"
+            :displayBounds="videoDisplayBounds" />
         </div>
       </div>
     </div>
@@ -64,11 +65,11 @@ export default {
       let displayWidth, displayHeight
       if (viewerAspect > videoAspect) {
         displayHeight = viewerSize.height
-        displayWidth = displayHeight * videoAspect
+        displayWidth = Math.round(displayHeight * videoAspect)
         displayLeft = Math.round((viewerSize.width - displayWidth) / 2)
       } else {
         displayWidth = viewerSize.width
-        displayHeight = displayWidth / videoAspect
+        displayHeight = Math.round(displayWidth / videoAspect)
         displayTop = Math.round((viewerSize.height - displayHeight) / 2)
       }
 

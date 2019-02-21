@@ -4,15 +4,20 @@
       :width="canvasSize.width" :height="canvasSize.height" />
     <div v-for="handle in handles" class="bounds-editor__handle"
       :class="`bounds-editor__handle--${handle.name}`"
-      :style="handle.style" />
+      :style="handle.style"
+      @mousedown="(event) => handleMouseDown(handle, event)" />
   </div>
 </template>
 
 <script>
+function clamp (x, min, max) {
+  return Math.max(Math.min(x, max), min)
+}
+
 export default {
   props: {
-    viewSize: Object,
-    bounds: Object
+    bounds: Object,
+    displayBounds: Object
   },
 
   data () {
@@ -38,6 +43,10 @@ export default {
     }
   },
 
+  created () {
+    this.dragPositions = {}
+  },
+
   mounted () {
     this.createContext()
     this.updateUI()
@@ -46,7 +55,7 @@ export default {
   computed: {
     canvasSize () {
       let { pxRatio } = this
-      let { width, height } = this.viewSize
+      let { width, height } = this.displayBounds
 
       return {
         width: width * pxRatio,
@@ -61,6 +70,64 @@ export default {
       this.ctx = canvas.getContext('2d')
     },
 
+    handleMouseDown (handle, event) {
+      let { clientX, clientY } = event
+      let { name } = handle
+
+      let dragPosition = this.dragPositions[name]
+      if (!dragPosition) {
+        dragPosition = this.dragPositions[name] = {
+          pos: [0, 0],
+          start: [0, 0],
+          move: [0, 0],
+          end: [0, 0]
+        }
+      }
+
+      let { start, pos } = dragPosition
+      pos[0] = handle.position[0]
+      pos[1] = handle.position[1]
+      start[0] = clientX
+      start[1] = clientY
+
+      event.preventDefault()
+      dragPosition._boundMove = this.handleMouseMove.bind(null, handle)
+      dragPosition._boundUp = this.handleMouseUp.bind(null, handle)
+      document.addEventListener('mousemove', dragPosition._boundMove, { passive: false })
+      document.addEventListener('mouseup', dragPosition._boundUp, { passive: false })
+    },
+
+    handleMouseMove (handle, event) {
+      let { clientX, clientY } = event
+      let { name } = handle
+      let { width, height } = this.displayBounds
+
+      let dragPosition = this.dragPositions[name]
+      let { start, move, pos } = dragPosition
+
+      move[0] = clientX
+      move[1] = clientY
+
+      let handleX = clamp(pos[0] + (move[0] - start[0]) / width, 0, 1)
+      let handleY = clamp(pos[1] + (move[1] - start[1]) / height, 0, 1)
+
+      this.updateBoundsFromHandle(handle, handleX, handleY)
+      event.preventDefault()
+    },
+
+    handleMouseUp (handle, event) {
+      let { clientX, clientY } = event
+      let { name } = handle
+      let dragPosition = this.dragPositions[name]
+
+      dragPosition.end[0] = clientX
+      dragPosition.end[1] = clientY
+
+      event.preventDefault()
+      document.removeEventListener('mousemove', dragPosition._boundMove, { passive: false })
+      document.removeEventListener('mouseup', dragPosition._boundUp, { passive: false })
+    },
+
     computeHandleStyle (handle) {
       let { position } = handle
       return {
@@ -70,8 +137,10 @@ export default {
     },
 
     updateUI () {
-      this.updateHandles()
-      this.drawUI()
+      requestAnimationFrame(() => {
+        this.updateHandles()
+        this.drawUI()
+      })
     },
 
     updateHandles () {
@@ -79,7 +148,7 @@ export default {
 
       handles.forEach((handle) => {
         this.updateHandlePosition(handle, bounds)
-        handle.style = this.computeHandleStyle(handle)
+        handle.style = this.computeHandleStyle(handle, bounds)
       })
     },
 
@@ -107,16 +176,42 @@ export default {
       }
     },
 
+    updateBoundsFromHandle (handle, handleX, handleY) {
+      let { name } = handle
+      let { bounds } = this
+
+      switch (name) {
+        case 'top-left':
+          bounds.top = handleY
+          bounds.left = handleX
+          break
+        case 'top-right':
+          bounds.top = handleY
+          bounds.right = 1 - handleX
+          break
+        case 'bottom-left':
+          bounds.bottom = 1 - handleY
+          bounds.left = handleX
+          break
+        case 'bottom-right':
+          bounds.bottom = 1 - handleY
+          bounds.right = 1 - handleX
+          break
+      }
+    },
+
     drawUI () {
-      let { ctx, canvasSize, pxRatio, viewSize, bounds } = this
-      let { width, height } = viewSize
+      let { ctx, canvasSize, pxRatio, displayBounds, bounds } = this
+      let { width, height } = displayBounds
       let { top, left, bottom, right } = bounds
 
       ctx.setTransform(1, 0, 0, 1, 0, 0)
       ctx.clearRect(0, 0, canvasSize.width, canvasSize.height)
+
+      ctx.save()
       ctx.scale(pxRatio, pxRatio)
 
-      ctx.globalAlpha = 0.5
+      ctx.globalAlpha = 0.7
 
       ctx.beginPath()
       ctx.rect(0, 0, width, height)
@@ -139,16 +234,23 @@ export default {
         width * (1 - (left + right)),
         height * (1 - (top + bottom)))
       ctx.stroke()
+      ctx.restore()
     }
   },
 
   watch: {
-    'viewSize.width' (val) {
-      this.updateUI()
+    'bounds': {
+      deep: true,
+      handler () {
+        this.updateUI()
+      }
     },
 
-    'viewSize.height' (val) {
-      this.updateUI()
+    'displayBounds': {
+      deep: true,
+      handler () {
+        this.updateUI()
+      }
     }
   }
 }
