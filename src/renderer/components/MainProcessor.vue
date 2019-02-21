@@ -66,12 +66,19 @@ export default {
         let { name, path, size, type, lastModified } = file
 
         let element = this.createVideo(path)
+        let bounds = {
+          top: 0.2,
+          left: 0.15,
+          right: 0.1,
+          bottom: 0.1
+        }
         let meta = {
           name, path, size, type, lastModified
         }
 
         return {
           meta,
+          bounds,
           element
         }
       })

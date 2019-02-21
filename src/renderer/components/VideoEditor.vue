@@ -3,15 +3,24 @@
     <div ref="viewer" class="video-editor__viewer">
       <div class="video-editor__viewer__inner"
         :style="videoInnerStyle">
-        <video v-if="isVideoLoaded" class="video-editor__viewer__element"
-          :src="video.element.src" :muted="muted" />
+        <div v-if="isVideoLoaded">
+          <video class="video-editor__viewer__element"
+            :src="video.element.src" :muted="muted" />
+          <bounds-editor :bounds="video.bounds" :viewSize="viewerSize" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import BoundsEditor from '@/components/BoundsEditor'
+
 export default {
+  components: {
+    BoundsEditor
+  },
+
   props: {
     video: Object
   },
