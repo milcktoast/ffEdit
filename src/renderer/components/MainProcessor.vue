@@ -3,6 +3,7 @@
     v-on:dragover="handleDragOver"
     v-on:drop="handleDrop">
     <div class="main-processor__tool-bar" />
+    <div class="main-processor__status-bar" />
     <video-list class="main-processor__video-list"
       :setActiveVideo="setActiveVideo"
       :activeVideoIndex="activeVideoIndex"
@@ -95,6 +96,9 @@ export default {
 
 <style lang="scss">
 .main-processor {
+  $tool-height: 56px;
+  $status-height: 24px;
+
   position: absolute;
   top: 0;
   left: 0;
@@ -109,22 +113,36 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
+    border-bottom: 1px solid #000;
+    background: #3b3b3b;
     width: 100%;
-    height: 40px;
+    height: $tool-height;
     -webkit-app-region: drag;
   }
 
+  &__status-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-top: 1px solid #000;
+    background: #3b3b3b;
+    width: 100%;
+    height: $status-height;
+  }
+
   &__video-list {
+    top: $tool-height;
+    border-right: 1px solid #000;
     background: #212121;
-    padding-top: 40px;
-    width: 20%;
-    height: 100%;
+    width: 240px;
+    height: calc(100% - #{($tool-height + $status-height)});
   }
 
   &__video-editor {
+    top: $tool-height;
     flex: 1;
     background: #181818;
-    height: 100%;
+    height: calc(100% - #{($tool-height + $status-height)});
   }
 }
 </style>

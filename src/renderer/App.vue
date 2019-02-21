@@ -12,7 +12,8 @@
 
 <style lang="scss">
 body {
-  font: 14px/1 'Fira Sans', sans-serif;
+  background: #212121;
+  font: 13px/1 'Fira Sans', sans-serif;
 }
 
 * {

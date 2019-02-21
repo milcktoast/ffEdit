@@ -19,7 +19,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 600,
-    titleBarStyle: 'hiddenInset',
+    titleBarStyle: 'hidden',
     useContentSize: true,
     webPreferences: {
       webSecurity: false,
