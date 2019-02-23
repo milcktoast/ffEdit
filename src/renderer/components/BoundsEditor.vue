@@ -24,6 +24,11 @@ export default {
     return {
       pxRatio: window.devicePixelRatio,
       handles: [{
+        name: 'center',
+        position: [0.5, 0.5],
+        axis: null,
+        style: ''
+      }, {
         name: 'top-left',
         position: [0, 0],
         axis: [1, 1],
@@ -116,7 +121,9 @@ export default {
       let offsetY = (move[1] - start[1]) / height
 
       let offset = [offsetX, offsetY]
-      let handlePosition = this.projectHandlePosition(handle, pos, offset)
+      let handlePosition = handle.axis
+        ? this.projectHandlePosition(handle, pos, offset)
+        : this.translateHandlePosition(handle, pos, offset)
 
       this.updateBoundsFromHandle(name, handlePosition)
       event.preventDefault()
@@ -155,6 +162,26 @@ export default {
 
       let ss = Math.min(ssx, ssy)
       vec2.scaleAndAdd(out, origin, ap, ss)
+
+      return out
+    },
+
+    translateHandlePosition (handle, origin, offset) {
+      let { width, height } = this.bounds
+      let out = vec2.add([], origin, offset)
+
+      let w2 = width / 2
+      let h2 = height / 2
+
+      let x0 = out[0] - w2
+      let x1 = out[0] + w2
+      let y0 = out[1] - h2
+      let y1 = out[1] + h2
+
+      if (x0 < 0) out[0] = w2
+      if (x1 > 1) out[0] = 1 - w2
+      if (y0 < 0) out[1] = h2
+      if (y1 > 1) out[1] = 1 - h2
 
       return out
     },
@@ -204,6 +231,10 @@ export default {
           position[0] = 1 - right
           position[1] = 1 - bottom
           break
+        case 'center':
+          position[0] = left + (1 - right - left) / 2
+          position[1] = top + (1 - bottom - top) / 2
+          break
       }
     },
 
@@ -227,7 +258,18 @@ export default {
           bounds.bottom = 1 - handlePosition[1]
           bounds.right = 1 - handlePosition[0]
           break
+        case 'center':
+          let h2 = bounds.height / 2
+          let w2 = bounds.width / 2
+          bounds.top = handlePosition[1] - h2
+          bounds.bottom = 1 - (handlePosition[1] + h2)
+          bounds.left = handlePosition[0] - w2
+          bounds.right = 1 - (handlePosition[0] + w2)
+          break
       }
+
+      bounds.width = 1 - (bounds.left + bounds.right)
+      bounds.height = 1 - (bounds.top + bounds.bottom)
     },
 
     drawUI () {
@@ -242,7 +284,12 @@ export default {
       ctx.scale(pxRatio, pxRatio)
 
       ctx.globalAlpha = 0.7
+      ctx.lineWidth = 1
+      ctx.fillStyle = '#000'
+      ctx.strokeStyle = '#fff'
 
+      // Shaded crop region
+      ctx.save()
       ctx.beginPath()
       ctx.rect(0, 0, width, height)
       ctx.rect(
@@ -250,13 +297,11 @@ export default {
         height * top,
         width * (1 - (left + right)),
         height * (1 - (top + bottom)))
-
       ctx.clip('evenodd')
       ctx.fill()
+      ctx.restore()
 
-      ctx.lineWidth = 1
-      ctx.strokeStyle = '#fff'
-
+      // Crop border
       ctx.beginPath()
       ctx.rect(
         width * left,
@@ -264,6 +309,23 @@ export default {
         width * (1 - (left + right)),
         height * (1 - (top + bottom)))
       ctx.stroke()
+
+      // Center guides
+      ctx.globalAlpha = 0.4
+      ctx.translate(
+        width * (left + (1 - (left + right)) / 2),
+        height * (top + (1 - (top + bottom)) / 2))
+
+      ctx.beginPath()
+      ctx.moveTo(0, -10)
+      ctx.lineTo(0, 10)
+      ctx.stroke()
+
+      ctx.beginPath()
+      ctx.moveTo(-10, 0)
+      ctx.lineTo(10, 0)
+      ctx.stroke()
+
       ctx.restore()
     }
   },
@@ -320,6 +382,14 @@ export default {
       width: 8px;
       height: 8px;
       transform: translate(-50%, -50%);
+    }
+
+    &--center {
+      width: 60px;
+      height: 60px;
+      cursor: move;
+
+      &:before { content: none; }
     }
 
     &--top-left { cursor: nwse-resize; }
