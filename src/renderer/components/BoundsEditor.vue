@@ -10,9 +10,9 @@
 </template>
 
 <script>
-function clamp (x, min, max) {
-  return Math.max(Math.min(x, max), min)
-}
+import * as vec2 from 'gl-vec2'
+
+import { clamp } from '@/utils/math'
 
 export default {
   props: {
@@ -26,18 +26,22 @@ export default {
       handles: [{
         name: 'top-left',
         position: [0, 0],
+        axis: [1, 1],
         style: ''
       }, {
         name: 'top-right',
         position: [1, 0],
+        axis: [1, -1],
         style: ''
       }, {
         name: 'bottom-left',
         position: [0, 1],
+        axis: [1, -1],
         style: ''
       }, {
         name: 'bottom-right',
         position: [1, 1],
+        axis: [-1, -1],
         style: ''
       }]
     }
@@ -108,10 +112,13 @@ export default {
       move[0] = clientX
       move[1] = clientY
 
-      let handleX = clamp(pos[0] + (move[0] - start[0]) / width, 0, 1)
-      let handleY = clamp(pos[1] + (move[1] - start[1]) / height, 0, 1)
+      let offsetX = (move[0] - start[0]) / width
+      let offsetY = (move[1] - start[1]) / height
 
-      this.updateBoundsFromHandle(handle, handleX, handleY)
+      let offset = [offsetX, offsetY]
+      let handlePosition = this.projectHandlePosition(handle, pos, offset)
+
+      this.updateBoundsFromHandle(name, handlePosition)
       event.preventDefault()
     },
 
@@ -126,6 +133,30 @@ export default {
       event.preventDefault()
       document.removeEventListener('mousemove', dragPosition._boundMove, { passive: false })
       document.removeEventListener('mouseup', dragPosition._boundUp, { passive: false })
+    },
+
+    // OPTIM: Cleanup array usage
+    projectHandlePosition (handle, origin, offset) {
+      let { axis } = handle
+
+      let ab = offset
+      let acu = vec2.normalize([], axis)
+
+      let pt = acu[0] * ab[0] + acu[1] * ab[1]
+      let ap = [acu[0] * pt, acu[1] * pt]
+      let out = vec2.add([], origin, ap)
+
+      let ssx = (out[0] > 1 || out[0] < 0)
+        ? (clamp(out[0], 0, 1) - origin[0]) / (out[0] - origin[0])
+        : 1
+      let ssy = (out[1] > 1 || out[1] < 0)
+        ? (clamp(out[1], 0, 1) - origin[1]) / (out[1] - origin[1])
+        : 1
+
+      let ss = Math.min(ssx, ssy)
+      vec2.scaleAndAdd(out, origin, ap, ss)
+
+      return out
     },
 
     computeHandleStyle (handle) {
@@ -176,26 +207,25 @@ export default {
       }
     },
 
-    updateBoundsFromHandle (handle, handleX, handleY) {
-      let { name } = handle
+    updateBoundsFromHandle (handleName, handlePosition) {
       let { bounds } = this
 
-      switch (name) {
+      switch (handleName) {
         case 'top-left':
-          bounds.top = handleY
-          bounds.left = handleX
+          bounds.top = handlePosition[1]
+          bounds.left = handlePosition[0]
           break
         case 'top-right':
-          bounds.top = handleY
-          bounds.right = 1 - handleX
+          bounds.top = handlePosition[1]
+          bounds.right = 1 - handlePosition[0]
           break
         case 'bottom-left':
-          bounds.bottom = 1 - handleY
-          bounds.left = handleX
+          bounds.bottom = 1 - handlePosition[1]
+          bounds.left = handlePosition[0]
           break
         case 'bottom-right':
-          bounds.bottom = 1 - handleY
-          bounds.right = 1 - handleX
+          bounds.bottom = 1 - handlePosition[1]
+          bounds.right = 1 - handlePosition[0]
           break
       }
     },
