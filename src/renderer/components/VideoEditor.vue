@@ -24,6 +24,7 @@ export default {
   },
 
   props: {
+    targetAspect: Number,
     video: Object
   },
 
@@ -34,7 +35,6 @@ export default {
 
   data () {
     return {
-      targetAspect: 1,
       viewerSize: {
         width: 0,
         height: 0

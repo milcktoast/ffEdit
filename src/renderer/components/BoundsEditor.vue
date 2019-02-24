@@ -205,24 +205,24 @@ export default {
 
     fitBoundsToAspect () {
       let { aspect, targetAspect, bounds } = this
-      let { top, left, width, height } = bounds
+      let { width, height } = bounds
       let boundsAspect = width / height * aspect
-      if (Math.abs(boundsAspect - targetAspect) < 0.0001) return
+      if (Math.abs(boundsAspect - targetAspect) < 1e-5) return
 
-      let targetWidth = width
-      let targetHeight = height
-      if (targetAspect > boundsAspect) {
-        targetWidth = width
+      let targetWidth = 1
+      let targetHeight = 1
+      if (targetAspect > aspect) {
+        targetWidth = 1
         targetHeight = targetWidth / targetAspect * aspect
-      } else if (targetAspect < boundsAspect) {
-        targetHeight = height
+      } else if (targetAspect < aspect) {
+        targetHeight = 1
         targetWidth = targetHeight * targetAspect / aspect
       }
 
       let w2 = targetWidth / 2
       let h2 = targetHeight / 2
-      let cx = left + width / 2
-      let cy = top + height / 2
+      let cx = 0.5
+      let cy = 0.5
 
       bounds.top = cy - h2
       bounds.bottom = 1 - (cy + h2)

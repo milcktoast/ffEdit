@@ -6,15 +6,18 @@
     <processor-status class="main-processor__status-bar"
       :activeVideo="activeVideo"
       :videos="videos"
-      :selectedVideos="selectedVideos" />
+      :selectedVideos="selectedVideos"
+      :output="output" />
     <video-list class="main-processor__video-list"
       :selectVideo="selectVideo"
       :selectToVideo="selectToVideo"
       :removeSelectedVideos="removeSelectedVideos"
       :videos="videos" />
     <video-editor class="main-processor__video-editor"
+      :targetAspect="outputAspect"
       :video="activeVideo" />
-    <video-output class="main-processor__video-output" />
+    <video-output class="main-processor__video-output"
+      :output="output" />
   </div>
 </template>
 
@@ -36,7 +39,17 @@ export default {
     return {
       willDropVideos: false,
       activeVideoIndex: -1,
-      videos: []
+      videos: [],
+      output: {
+        destination: {
+          path: '~/',
+          name: ''
+        },
+        size: {
+          width: 512,
+          height: 512
+        }
+      }
     }
   },
 
@@ -63,6 +76,11 @@ export default {
     selectedVideos () {
       let { videos } = this
       return videos.filter((video) => video.state.isSelected)
+    },
+
+    outputAspect () {
+      let { width, height } = this.output.size
+      return width / height
     }
   },
 

@@ -4,7 +4,7 @@
       {{ selectionDescriptor }}
     </div>
     <div class="processor-status__item">
-      {{ activeVideoDescriptor }}
+      {{ activeVideoDescriptor }} <span>•</span> {{ sizeDescriptor }}
     </div>
     <div class="processor-status__item">
       {{ outputDescriptor }}
@@ -17,7 +17,8 @@ export default {
   props: {
     activeVideo: Object,
     videos: Array,
-    selectedVideos: Array
+    selectedVideos: Array,
+    output: Object
   },
 
   computed: {
@@ -38,8 +39,21 @@ export default {
       return `[ ${boundsDesc} ]`
     },
 
+    sizeDescriptor () {
+      let { activeVideo, output } = this
+      if (!activeVideo) return null
+
+      let { width, height } = output.size
+      let sizeDesc = [width, height].join(' x ')
+
+      return `[ ${sizeDesc} ]`
+    },
+
     outputDescriptor () {
-      return null
+      let { videos, output } = this
+      let { path, name } = output.destination
+
+      return `${videos.length} videos to ${path}${name}`
     }
   }
 }
@@ -51,5 +65,13 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 6px 20px;
+
+  &__item {
+    padding: 0 8px;
+
+    > span {
+      padding: 0 4px;
+    }
+  }
 }
 </style>

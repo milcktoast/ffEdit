@@ -13,7 +13,7 @@
         {{ video.meta.name }}
       </li>
     </ul>
-    <div class="video-list__controls">
+    <div class="video-list__actions">
       <button @click="removeSelectedVideos"
         title="Remove selected videos">
         –
@@ -79,7 +79,7 @@ export default {
     }
   }
 
-  &__controls {
+  &__actions {
     position: absolute;
     left: 0;
     bottom: 0;
