@@ -3,7 +3,10 @@
     v-on:dragover="handleDragOver"
     v-on:drop="handleDrop">
     <div class="main-processor__tool-bar" />
-    <div class="main-processor__status-bar" />
+    <processor-status class="main-processor__status-bar"
+      :activeVideo="activeVideo"
+      :videos="videos"
+      :selectedVideos="selectedVideos" />
     <video-list class="main-processor__video-list"
       :selectVideo="selectVideo"
       :selectToVideo="selectToVideo"
@@ -11,18 +14,22 @@
       :videos="videos" />
     <video-editor class="main-processor__video-editor"
       :video="activeVideo" />
-    <div class="main-processor__video-output" />
+    <video-output class="main-processor__video-output" />
   </div>
 </template>
 
 <script>
 import VideoList from '@/components/VideoList'
+import VideoOutput from '@/components/VideoOutput'
 import VideoEditor from '@/components/VideoEditor'
+import ProcessorStatus from '@/components/ProcessorStatus'
 
 export default {
   components: {
     VideoList,
-    VideoEditor
+    VideoOutput,
+    VideoEditor,
+    ProcessorStatus
   },
 
   data () {
@@ -51,6 +58,11 @@ export default {
       let { activeVideoIndex, videos } = this
       let activeVideo = activeVideoIndex < 0 ? null : videos[activeVideoIndex]
       return activeVideo
+    },
+
+    selectedVideos () {
+      let { videos } = this
+      return videos.filter((video) => video.state.isSelected)
     }
   },
 

@@ -13,6 +13,7 @@
 <style lang="scss">
 body {
   background: #212121;
+  color: #fff;
   font: 13px/1 'Fira Sans', 'Helvetica', sans-serif;
 }
 
