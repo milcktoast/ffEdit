@@ -31,6 +31,11 @@ export default {
     }
   },
 
+  created () {
+    this.bindAppEvents()
+    this.triggerReady()
+  },
+
   computed: {
     mainStyle () {
       let { willDropVideos } = this
@@ -48,6 +53,17 @@ export default {
   },
 
   methods: {
+    bindAppEvents () {
+      let { ipcRenderer } = this.$electron
+      ipcRenderer.on('serialize-project', this.serialize.bind(this))
+      ipcRenderer.on('deserialize-project', this.deserialize.bind(this))
+    },
+
+    triggerReady () {
+      let { ipcRenderer } = this.$electron
+      ipcRenderer.send('main-ready')
+    },
+
     handleDragOver (event) {
       let { find } = Array.prototype
       let { items } = event.dataTransfer
@@ -65,7 +81,7 @@ export default {
       let nextVideos = map.call(files, (file) => {
         let { name, path, size, type, lastModified } = file
 
-        let element = this.createVideo(path)
+        let element = this.createVideoElement(path)
         let bounds = {
           top: 0,
           left: 0,
@@ -90,7 +106,7 @@ export default {
       this.videos.push(...nextVideos)
     },
 
-    createVideo (src) {
+    createVideoElement (src) {
       let video = document.createElement('video')
       video.src = `file://${src}`
       return video
@@ -98,6 +114,37 @@ export default {
 
     setActiveVideo (video, index) {
       this.activeVideoIndex = index
+    },
+
+    serialize () {
+      let { ipcRenderer } = this.$electron
+      let videos = this.videos.map((video) => {
+        let { meta, bounds } = video
+        return {
+          meta, bounds
+        }
+      })
+      let data = {
+        videos
+      }
+
+      ipcRenderer.send('serialize-project--response', data)
+    },
+
+    deserialize (event, json) {
+      let data = JSON.parse(json)
+      let videos = data.videos.map((video) => {
+        let { meta, bounds } = video
+        let element = this.createVideoElement(meta.path)
+
+        return {
+          meta,
+          bounds,
+          element
+        }
+      })
+
+      this.videos = videos
     }
   }
 }
