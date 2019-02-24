@@ -51,9 +51,10 @@ export default {
 
     outputDescriptor () {
       let { videos, output } = this
+      let { format } = output
       let { path, name } = output.destination
 
-      return `${videos.length} videos to ${path}${name}`
+      return `${videos.length} videos to ${path}${name}[name].${format}`
     }
   }
 }

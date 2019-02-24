@@ -37,4 +37,16 @@ input {
   color: #fff;
   font: 13px/1 'Fira Mono', 'Monaco', monospace;
 }
+
+select {
+  margin: 4px;
+  outline: none;
+  border: 1px solid rgba(#fff, 0.2);
+  border-radius: 2px;
+  background: #111;
+  padding: 2px 4px;
+  display: inline-block;
+  color: #fff;
+  font: 13px/1 'Fira Mono', 'Monaco', monospace;
+}
 </style>

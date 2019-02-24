@@ -32,6 +32,14 @@
             v-model="output.destination.name" />
           directory
         </label>
+        <label>
+          <select class="video-output__format__input"
+            v-model="output.format">
+            <option value="mp4">mp4</option>
+            <option value="webm">webm</option>
+          </select>
+          format
+        </label>
       </div>
     </div>
   </div>
@@ -117,7 +125,14 @@ export default {
   &__dest {
     &__input {
       margin: 2px 8px 2px 0;
-      width: 100px;
+      width: 70px;
+    }
+  }
+
+  &__format {
+    &__input {
+      margin: 2px 8px 2px 0;
+      width: 70px;
     }
   }
 }

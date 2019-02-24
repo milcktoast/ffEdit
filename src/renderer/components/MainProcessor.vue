@@ -41,6 +41,7 @@ export default {
       activeVideoIndex: -1,
       videos: [],
       output: {
+        format: 'mp4',
         destination: {
           path: '~/',
           name: ''
