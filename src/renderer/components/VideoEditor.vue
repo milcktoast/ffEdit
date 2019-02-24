@@ -6,8 +6,9 @@
         <div v-if="isVideoLoaded">
           <video class="video-editor__viewer__element"
             :src="video.element.src" :muted="muted" />
-          <bounds-editor :bounds="video.bounds"
-            :displayBounds="videoDisplayBounds" />
+          <bounds-editor
+            :aspect="videoAspect" :targetAspect="targetAspect"
+            :bounds="video.bounds" :displayBounds="videoDisplayBounds" />
         </div>
       </div>
     </div>
@@ -33,6 +34,7 @@ export default {
 
   data () {
     return {
+      targetAspect: 1,
       viewerSize: {
         width: 0,
         height: 0

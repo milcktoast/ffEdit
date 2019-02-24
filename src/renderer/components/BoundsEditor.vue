@@ -16,6 +16,8 @@ import { clamp } from '@/utils/math'
 
 export default {
   props: {
+    aspect: Number,
+    targetAspect: Number,
     bounds: Object,
     displayBounds: Object
   },
@@ -54,6 +56,7 @@ export default {
 
   created () {
     this.dragPositions = {}
+    this.fitBoundsToAspect()
   },
 
   mounted () {
@@ -144,10 +147,24 @@ export default {
 
     // OPTIM: Cleanup array usage
     projectHandlePosition (handle, origin, offset) {
+      let { aspect, targetAspect } = this
       let { axis } = handle
 
+      let axisAspect = axis
+      if (targetAspect > aspect) {
+        axisAspect = [
+          axis[0],
+          axis[1] / targetAspect * aspect
+        ]
+      } else if (targetAspect < aspect) {
+        axisAspect = [
+          axis[0] * targetAspect / aspect,
+          axis[1]
+        ]
+      }
+
       let ab = offset
-      let acu = vec2.normalize([], axis)
+      let acu = vec2.normalize([], axisAspect)
 
       let pt = acu[0] * ab[0] + acu[1] * ab[1]
       let ap = [acu[0] * pt, acu[1] * pt]
@@ -184,6 +201,35 @@ export default {
       if (y1 > 1) out[1] = 1 - h2
 
       return out
+    },
+
+    fitBoundsToAspect () {
+      let { aspect, targetAspect, bounds } = this
+      let { top, left, width, height } = bounds
+      let boundsAspect = width / height * aspect
+      if (Math.abs(boundsAspect - targetAspect) < 0.0001) return
+
+      let targetWidth = width
+      let targetHeight = height
+      if (targetAspect > boundsAspect) {
+        targetWidth = width
+        targetHeight = targetWidth / targetAspect * aspect
+      } else if (targetAspect < boundsAspect) {
+        targetHeight = height
+        targetWidth = targetHeight * targetAspect / aspect
+      }
+
+      let w2 = targetWidth / 2
+      let h2 = targetHeight / 2
+      let cx = left + width / 2
+      let cy = top + height / 2
+
+      bounds.top = cy - h2
+      bounds.bottom = 1 - (cy + h2)
+      bounds.left = cx - w2
+      bounds.right = 1 - (cx + w2)
+      bounds.width = targetWidth
+      bounds.height = targetHeight
     },
 
     computeHandleStyle (handle) {
@@ -331,9 +377,20 @@ export default {
   },
 
   watch: {
+    'aspect' () {
+      this.fitBoundsToAspect()
+      this.updateUI()
+    },
+
+    'targetAspect' () {
+      this.fitBoundsToAspect()
+      this.updateUI()
+    },
+
     'bounds': {
       deep: true,
       handler () {
+        this.fitBoundsToAspect()
         this.updateUI()
       }
     },
