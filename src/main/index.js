@@ -39,7 +39,7 @@ function createMainWindow () {
   if (appWindows.main != null) return
 
   let main = appWindows.main = new BrowserWindow({
-    width: 1000,
+    width: 1200,
     height: 600,
     titleBarStyle: 'hidden',
     useContentSize: true,

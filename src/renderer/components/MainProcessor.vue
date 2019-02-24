@@ -5,11 +5,12 @@
     <div class="main-processor__tool-bar" />
     <div class="main-processor__status-bar" />
     <video-list class="main-processor__video-list"
-      :setActiveVideo="setActiveVideo"
-      :activeVideoIndex="activeVideoIndex"
+      :selectVideo="selectVideo"
+      :selectToVideo="selectToVideo"
       :videos="videos" />
     <video-editor class="main-processor__video-editor"
       :video="activeVideo" />
+    <div class="main-processor__video-output" />
   </div>
 </template>
 
@@ -81,7 +82,6 @@ export default {
       let nextVideos = map.call(files, (file) => {
         let { name, path, size, type, lastModified } = file
 
-        let element = this.createVideoElement(path)
         let bounds = {
           top: 0,
           left: 0,
@@ -94,16 +94,27 @@ export default {
           name, path, size, type, lastModified
         }
 
-        return {
-          meta,
-          bounds,
-          element
-        }
+        return this.createVideoItem(meta, bounds)
       })
 
       event.preventDefault()
       this.willDropVideos = false
       this.videos.push(...nextVideos)
+    },
+
+    createVideoItem (meta, bounds) {
+      let element = this.createVideoElement(meta.path)
+      let state = {
+        isSelected: false,
+        isActive: false
+      }
+
+      return {
+        meta,
+        bounds,
+        element,
+        state
+      }
     },
 
     createVideoElement (src) {
@@ -112,8 +123,25 @@ export default {
       return video
     },
 
-    setActiveVideo (video, index) {
+    selectVideo (index) {
+      let { videos } = this
+
       this.activeVideoIndex = index
+      videos.forEach((video, i) => {
+        video.state.isActive = i === index
+        video.state.isSelected = false
+      })
+    },
+
+    selectToVideo (index) {
+      let { activeVideoIndex, videos } = this
+      let start = Math.min(activeVideoIndex, index)
+      let end = Math.max(activeVideoIndex, index)
+
+      videos.forEach((video, i) => {
+        let isSelected = i >= start && i <= end
+        videos[i].state.isSelected = isSelected
+      })
     },
 
     serialize () {
@@ -135,13 +163,7 @@ export default {
       let data = JSON.parse(json)
       let videos = data.videos.map((video) => {
         let { meta, bounds } = video
-        let element = this.createVideoElement(meta.path)
-
-        return {
-          meta,
-          bounds,
-          element
-        }
+        return this.createVideoItem(meta, bounds)
       })
 
       this.videos = videos
@@ -188,7 +210,7 @@ export default {
 
   &__video-list {
     top: $tool-height;
-    border-right: 1px solid #000;
+    border-right: 1px solid rgba(#000, 0.5);
     background: #212121;
     width: 240px;
     height: calc(100% - #{($tool-height + $status-height)});
@@ -197,7 +219,15 @@ export default {
   &__video-editor {
     top: $tool-height;
     flex: 1;
-    background: #181818;
+    background: #111;
+    height: calc(100% - #{($tool-height + $status-height)});
+  }
+
+  &__video-output {
+    top: $tool-height;
+    border-left: 1px solid rgba(#000, 0.5);
+    background: #212121;
+    width: 240px;
     height: calc(100% - #{($tool-height + $status-height)});
   }
 }
