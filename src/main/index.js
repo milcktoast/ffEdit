@@ -39,6 +39,7 @@ function createMainWindow () {
   if (appWindows.main != null) return
 
   let main = appWindows.main = new BrowserWindow({
+    backgroundColor: '#111',
     width: 1200,
     height: 600,
     titleBarStyle: 'hidden',

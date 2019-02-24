@@ -7,6 +7,7 @@
     <video-list class="main-processor__video-list"
       :selectVideo="selectVideo"
       :selectToVideo="selectToVideo"
+      :removeSelectedVideos="removeSelectedVideos"
       :videos="videos" />
     <video-editor class="main-processor__video-editor"
       :video="activeVideo" />
@@ -128,8 +129,9 @@ export default {
 
       this.activeVideoIndex = index
       videos.forEach((video, i) => {
-        video.state.isActive = i === index
-        video.state.isSelected = false
+        let isActive = i === index
+        video.state.isActive = isActive
+        video.state.isSelected = isActive
       })
     },
 
@@ -142,6 +144,18 @@ export default {
         let isSelected = i >= start && i <= end
         videos[i].state.isSelected = isSelected
       })
+    },
+
+    removeSelectedVideos () {
+      let { videos } = this
+
+      for (var i = videos.length - 1; i >= 0; i--) {
+        let video = videos[i]
+        if (video.state.isSelected) {
+          videos.splice(i, 1)
+        }
+      }
+      this.activeVideoIndex = -1
     },
 
     serialize () {

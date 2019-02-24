@@ -13,6 +13,12 @@
         {{ video.meta.name }}
       </li>
     </ul>
+    <div class="video-list__controls">
+      <button @click="removeSelectedVideos"
+        title="Remove selected videos">
+        –
+      </button>
+    </div>
   </div>
 </template>
 
@@ -22,6 +28,7 @@ export default {
     selectVideo: Function,
     selectToVideo: Function,
     activeVideoIndex: Number,
+    removeSelectedVideos: Function,
     videos: Array
   },
 
@@ -70,6 +77,16 @@ export default {
     &.active {
       background: rgba(#000, 0.4);
     }
+  }
+
+  &__controls {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    border-top: 1px solid rgba(#fff, 0.2);
+    padding: 6px 20px;
+    width: 100%;
+    height: 30px;
   }
 }
 </style>
