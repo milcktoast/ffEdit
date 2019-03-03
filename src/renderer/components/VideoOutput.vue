@@ -29,8 +29,7 @@
           <!-- TODO: Select destination directory with dialog -->
           <input class="video-output__dest__input"
             type="text"
-            v-model="output.destination.name" />
-          directory
+            v-model="output.destination.path" />
         </label>
         <label>
           <select class="video-output__format__input"
@@ -125,7 +124,7 @@ export default {
   &__dest {
     &__input {
       margin: 2px 8px 2px 0;
-      width: 70px;
+      width: 100%;
     }
   }
 
