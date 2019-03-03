@@ -1,7 +1,5 @@
 <template>
-  <div class="main-processor" :style="mainStyle"
-    v-on:dragover="handleDragOver"
-    v-on:drop="handleDrop">
+  <div class="main-processor" :style="mainStyle">
     <div class="main-processor__tool-bar" />
     <processor-status class="main-processor__status-bar"
       :activeVideo="activeVideo"
@@ -12,6 +10,7 @@
       :selectVideo="selectVideo"
       :selectToVideo="selectToVideo"
       :removeSelectedVideos="removeSelectedVideos"
+      :createVideoItem="createVideoItem"
       :videos="videos" />
     <video-editor class="main-processor__video-editor"
       :targetAspect="outputAspect"
@@ -43,8 +42,7 @@ export default {
       output: {
         format: 'mp4',
         destination: {
-          path: '~/',
-          name: ''
+          path: '~/'
         },
         size: {
           width: 512,
@@ -95,43 +93,6 @@ export default {
     triggerReady () {
       let { ipcRenderer } = this.$electron
       ipcRenderer.send('main-ready')
-    },
-
-    handleDragOver (event) {
-      let { find } = Array.prototype
-      let { items } = event.dataTransfer
-      let willDropVideos = items.length &&
-        find.call(items, (item) => item.type.match('video') != null) != null
-
-      event.preventDefault()
-      this.willDropVideos = !!willDropVideos
-    },
-
-    handleDrop (event) {
-      let { map } = Array.prototype
-      let { files } = event.dataTransfer
-
-      let nextVideos = map.call(files, (file) => {
-        let { name, path, size, type, lastModified } = file
-
-        let bounds = {
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          width: 1,
-          height: 1
-        }
-        let meta = {
-          name, path, size, type, lastModified
-        }
-
-        return this.createVideoItem(meta, bounds)
-      })
-
-      event.preventDefault()
-      this.willDropVideos = false
-      this.videos.push(...nextVideos)
     },
 
     createVideoItem (meta, bounds) {
