@@ -4,17 +4,21 @@ import { spawn } from 'child_process'
 const ffmpeg = '/usr/local/bin/ffmpeg'
 
 export function processVideo (video, output) {
-  return new Promise((resolve, reject) => {
-    let encoder = createVideoEncodeStream(video, output)
-
+  let encoder = createVideoEncodeStream(video, output)
+  let res = new Promise((resolve, reject) => {
     encoder.stderr.pipe(process.stdout)
     encoder.stderr.on('end', () => {
       resolve(video)
     })
   })
+
+  return {
+    kill: () => encoder.kill(),
+    then: (fn) => res.then(fn)
+  }
 }
 
-function createVideoEncodeStream (video, output) {
+export function createVideoEncodeStream (video, output) {
   let { meta, size, bounds } = video
 
   let crop = computeCrop(size, bounds)

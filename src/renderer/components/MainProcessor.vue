@@ -17,6 +17,8 @@
       :video="activeVideo" />
     <video-output class="main-processor__video-output"
       :processVideos="processVideos"
+      :processVideosCancel="processVideosCancel"
+      :processor="processor"
       :output="output" />
   </div>
 </template>
@@ -55,6 +57,7 @@ export default {
       },
       processor: {
         isRunning: false,
+        shouldCancel: false,
         complete: 0,
         total: 0
       }
@@ -199,14 +202,19 @@ export default {
       if (processor.isRunning) return
 
       processor.isRunning = true
+      processor.shouldCancel = false
       processor.complete = 0
       processor.total = videos.length
 
       let index = 0
       const processUntilDone = () => {
         let nextVideo = videos[index]
-        if (!nextVideo) return Promise.resolve()
-        return processVideo(nextVideo, output).then(() => {
+        if (!nextVideo || processor.shouldCancel) {
+          return Promise.resolve()
+        }
+
+        let activeEncoder = this._activeEncoder = processVideo(nextVideo, output)
+        return activeEncoder.then(() => {
           index++
           processor.complete++
           return processUntilDone()
@@ -214,8 +222,17 @@ export default {
       }
 
       return processUntilDone().then(() => {
+        this._activeEncoder = null
         processor.isRunning = false
       })
+    },
+
+    processVideosCancel () {
+      let { processor } = this
+
+      processor.isRunning = false
+      processor.shouldCancel = true
+      this._activeEncoder.kill()
     }
   }
 }
