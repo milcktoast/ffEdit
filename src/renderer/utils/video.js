@@ -22,7 +22,7 @@ export function createVideoEncodeStream (video, output) {
   let { meta, size, bounds } = video
 
   let crop = computeCrop(size, bounds)
-  let cropStr = `${crop.width}:${crop.height}:${crop.top}:${crop.left}`
+  let cropStr = `${crop.width}:${crop.height}:${crop.left}:${crop.top}`
   let scaleStr = `${output.size.width}:${output.size.height}`
 
   let src = meta.path
