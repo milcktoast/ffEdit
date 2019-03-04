@@ -16,11 +16,15 @@
       :targetAspect="outputAspect"
       :video="activeVideo" />
     <video-output class="main-processor__video-output"
+      :processVideos="processVideos"
       :output="output" />
   </div>
 </template>
 
 <script>
+import { loadVideo } from '@/utils/resource'
+import { processVideo } from '@/utils/video'
+
 import VideoList from '@/components/VideoList'
 import VideoOutput from '@/components/VideoOutput'
 import VideoEditor from '@/components/VideoEditor'
@@ -42,12 +46,17 @@ export default {
       output: {
         format: 'mp4',
         destination: {
-          path: '~/'
+          path: '~/Downloads/'
         },
         size: {
           width: 512,
           height: 512
         }
+      },
+      processor: {
+        isRunning: false,
+        complete: 0,
+        total: 0
       }
     }
   },
@@ -97,13 +106,23 @@ export default {
 
     createVideoItem (meta, bounds) {
       let element = this.createVideoElement(meta.path)
+      let size = {
+        width: 0,
+        height: 0
+      }
       let state = {
         isSelected: false,
         isActive: false
       }
 
+      loadVideo(element.src).then(() => {
+        size.width = element.videoWidth
+        size.height = element.videoHeight
+      })
+
       return {
         meta,
+        size,
         bounds,
         element,
         state
@@ -173,6 +192,30 @@ export default {
       })
 
       this.videos = videos
+    },
+
+    processVideos () {
+      let { videos, output, processor } = this
+      if (processor.isRunning) return
+
+      processor.isRunning = true
+      processor.complete = 0
+      processor.total = videos.length
+
+      let index = 0
+      const processUntilDone = () => {
+        let nextVideo = videos[index]
+        if (!nextVideo) return Promise.resolve()
+        return processVideo(nextVideo, output).then(() => {
+          index++
+          processor.complete++
+          return processUntilDone()
+        })
+      }
+
+      return processUntilDone().then(() => {
+        processor.isRunning = false
+      })
     }
   }
 }

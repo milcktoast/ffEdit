@@ -27,26 +27,27 @@ button {
   background: #676767;
 }
 
-input {
-  margin: 4px;
+input,
+select,
+button {
+  outline: none;
   border: 1px solid rgba(#fff, 0.2);
   border-radius: 2px;
-  background: #111;
-  padding: 2px 4px;
   display: inline-block;
   color: #fff;
   font: 13px/1 'Fira Mono', 'Monaco', monospace;
 }
 
+input,
 select {
   margin: 4px;
-  outline: none;
-  border: 1px solid rgba(#fff, 0.2);
-  border-radius: 2px;
   background: #111;
   padding: 2px 4px;
-  display: inline-block;
-  color: #fff;
-  font: 13px/1 'Fira Mono', 'Monaco', monospace;
+}
+
+button {
+  margin: 0;
+  background: #444;
+  padding: 3px 8px;
 }
 </style>

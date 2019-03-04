@@ -41,6 +41,11 @@
         </label>
       </div>
     </div>
+    <div class="video-output__actions">
+      <button @click="processVideos">
+        Process
+      </button>
+    </div>
   </div>
 </template>
 
@@ -49,6 +54,7 @@ import debounce from 'debounce'
 
 export default {
   props: {
+    processVideos: Function,
     output: Object
   },
 
@@ -111,10 +117,6 @@ export default {
   &__size {
     margin-bottom: 20px;
 
-    &__label {
-      display: block;
-    }
-
     &__input {
       margin: 2px 8px 2px 0;
       width: 70px;
@@ -133,6 +135,19 @@ export default {
       margin: 2px 8px 2px 0;
       width: 70px;
     }
+  }
+
+  &__actions {
+    position: absolute;
+    top: -36px;
+    left: 0;
+    padding: 6px 20px;
+    width: 100%;
+    height: 32px;
+  }
+
+  label {
+    display: block;
   }
 }
 </style>
