@@ -10,9 +10,14 @@
         v-for="(video, index) in videos"
         :class="`${(video.state.isActive ? 'active' : '')}
           ${(video.state.isSelected ? 'selected' : '')}`"
-        :title="video.meta.path"
-        @click="(event) => clickVideoItem(video, index, event)">
-        {{ video.meta.name }}
+        :title="video.meta.path">
+        <div class="video-list__item__name"
+          @click="(event) => clickVideoItem(video, index, event)">
+          {{ video.meta.name }}
+        </div>
+        <label class="video-list__item__encode-toggle">
+          <input type="checkbox" v-model="video.state.shouldEncode" />
+        </label>
       </li>
     </ul>
     <div class="video-list__actions">
@@ -75,12 +80,12 @@ export default {
     },
 
     clickVideoItem (video, index, event) {
+      event.preventDefault()
       if (event.shiftKey) {
         this.selectToVideo(index)
       } else {
         this.selectVideo(index)
       }
-      event.preventDefault()
     }
   }
 }
@@ -117,6 +122,25 @@ export default {
 
     &.active {
       background: rgba(#000, 0.4);
+    }
+
+    &__name {
+    }
+
+    &__encode-toggle {
+      position: absolute;
+      top: 0;
+      right: 4px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 100%;
+
+      > input {
+        border: none;
+      }
     }
   }
 

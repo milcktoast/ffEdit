@@ -19,6 +19,7 @@ export default {
   props: {
     activeVideo: Object,
     videos: Array,
+    enabledVideos: Array,
     selectedVideos: Array,
     output: Object
   },
@@ -53,11 +54,11 @@ export default {
     },
 
     outputDescriptor () {
-      let { videos, output } = this
+      let { enabledVideos, output } = this
       let { format } = output
       let { path } = output.destination
 
-      return `${videos.length} videos to ${path}[name].${format}`
+      return `${enabledVideos.length} videos to ${path}[name].${format}`
     }
   }
 }

@@ -5,6 +5,7 @@
       :activeVideo="activeVideo"
       :videos="videos"
       :selectedVideos="selectedVideos"
+      :enabledVideos="enabledVideos"
       :output="output" />
     <video-list class="main-processor__video-list"
       :selectVideo="selectVideo"
@@ -89,6 +90,11 @@ export default {
       return videos.filter((video) => video.state.isSelected)
     },
 
+    enabledVideos () {
+      let { videos } = this
+      return videos.filter((video) => video.state.shouldEncode)
+    },
+
     outputAspect () {
       let { width, height } = this.output.size
       return width / height
@@ -115,7 +121,8 @@ export default {
       }
       let state = {
         isSelected: false,
-        isActive: false
+        isActive: false,
+        shouldEncode: true
       }
 
       loadVideo(element.src).then(() => {
@@ -198,7 +205,8 @@ export default {
     },
 
     processVideos () {
-      let { videos, output, processor } = this
+      let videos = this.enabledVideos
+      let { output, processor } = this
       if (processor.isRunning) return
 
       processor.isRunning = true
