@@ -1,12 +1,18 @@
 import path from 'path'
 import { spawn } from 'child_process'
+import log from 'electron-log'
 
+const LOG_FFMPEG = false
 const ffmpeg = '/usr/local/bin/ffmpeg'
 
 export function processVideo (video, output) {
   let encoder = createVideoEncodeStream(video, output)
   let res = new Promise((resolve, reject) => {
-    encoder.stderr.pipe(process.stdout)
+    if (LOG_FFMPEG) {
+      encoder.stderr.on('data', (data) => {
+        log.info(`${data}`)
+      })
+    }
     encoder.stderr.on('end', () => {
       resolve(video)
     })
@@ -38,7 +44,7 @@ export function createVideoEncodeStream (video, output) {
     '-y', dest
   ]
 
-  return spawn(ffmpeg, args, { cwd: __dirname })
+  return spawn(ffmpeg, args)
 }
 
 export function computeCrop (size, bounds) {
