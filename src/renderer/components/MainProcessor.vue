@@ -59,6 +59,7 @@ export default {
       processor: {
         isRunning: false,
         shouldCancel: false,
+        active: 0,
         complete: 0,
         total: 0
       }
@@ -221,6 +222,7 @@ export default {
           return Promise.resolve()
         }
 
+        processor.active = index + 1
         let activeEncoder = this._activeEncoder = processVideo(nextVideo, output)
         return activeEncoder.then(() => {
           index++
