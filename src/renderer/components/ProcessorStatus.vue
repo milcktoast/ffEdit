@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import { computeCrop } from '@/utils/video'
+
 export default {
   props: {
     activeVideo: Object,
@@ -31,9 +33,10 @@ export default {
       let { activeVideo } = this
       if (!activeVideo) return null
 
-      let { bounds } = activeVideo
+      let { size, bounds } = activeVideo
+      let crop = computeCrop(size, bounds)
       let boundsDesc = ['left', 'top', 'width', 'height']
-        .map((n) => Math.abs(bounds[n]).toFixed(2))
+        .map((n) => Math.abs(crop[n]))
         .join(', ')
 
       return `[ ${boundsDesc} ]`
