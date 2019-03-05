@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { basename as pathBasename } from 'path'
 import { computeCrop } from '@/utils/video'
 
 export default {
@@ -57,8 +58,9 @@ export default {
       let { enabledVideos, output } = this
       let { format } = output
       let { path } = output.destination
+      let truncatedPath = pathBasename(path)
 
-      return `${enabledVideos.length} videos to ${path}[name].${format}`
+      return `${enabledVideos.length} videos to .../${truncatedPath}/[name].${format}`
     }
   }
 }

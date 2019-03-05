@@ -114,7 +114,7 @@ export default {
       ipcRenderer.send('main-ready')
     },
 
-    createVideoItem (meta, bounds) {
+    createVideoItem (meta, bounds, seek) {
       let element = this.createVideoElement(meta.path)
       let size = {
         width: 0,
@@ -126,15 +126,25 @@ export default {
         shouldEncode: true
       }
 
+      // TODO: Cleanup setting initial seek
       loadVideo(element.src).then(() => {
-        size.width = element.videoWidth
-        size.height = element.videoHeight
+        let { videoWidth, videoHeight, duration } = element
+        let durationMs = Math.floor(duration * 1000)
+
+        size.width = videoWidth
+        size.height = videoHeight
+
+        if (!seek.duration) {
+          seek.duration = durationMs
+          seek.trim[1] = durationMs
+        }
       })
 
       return {
         meta,
         size,
         bounds,
+        seek,
         element,
         state
       }
@@ -185,15 +195,16 @@ export default {
 
       let { output } = this
       let videos = this.videos.map((video) => {
-        let { meta, bounds } = video
+        let { meta, bounds, seek } = video
         return {
-          meta, bounds
+          meta, bounds, seek
         }
       })
       let data = {
         output,
         videos
       }
+      console.log('serialize', data)
 
       ipcRenderer.send('serialize-project--response', data)
     },
@@ -202,8 +213,8 @@ export default {
       let data = JSON.parse(json)
       let { output } = data
       let videos = data.videos.map((video) => {
-        let { meta, bounds } = video
-        return this.createVideoItem(meta, bounds)
+        let { meta, bounds, seek } = video
+        return this.createVideoItem(meta, bounds, seek)
       })
 
       Object.assign(this.output, output)

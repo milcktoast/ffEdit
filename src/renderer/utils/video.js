@@ -37,7 +37,7 @@ export function createVideoEncodeStream (video, output) {
     .replace('~', process.env['HOME'])
   let dest = path.resolve(
     destBasePath,
-    `${meta.name}.${output.format}`)
+    `./${meta.name}.${output.format}`)
 
   let args = [
     '-i', src,
@@ -48,6 +48,9 @@ export function createVideoEncodeStream (video, output) {
   mkdirp.sync(destBasePath)
 
   return spawn(ffmpeg, args)
+}
+
+export function computeSeekTrim (seek) {
 }
 
 export function computeCrop (size, bounds) {

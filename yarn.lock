@@ -8778,6 +8778,11 @@ vue-router@^3.0.1:
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.0.2.tgz#dedc67afe6c4e2bc25682c8b1c2a8c0d7c7e56be"
   integrity sha512-opKtsxjp9eOcFWdp6xLQPLmRGgfM932Tl56U9chYTnoWqKxQ8M20N7AkdEbM5beUh6wICoFGYugAX9vQjyJLFg==
 
+vue-slider-component@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/vue-slider-component/-/vue-slider-component-3.0.5.tgz#e5d8a2e9a5aee45fc0ce885facde165233d27c1a"
+  integrity sha512-021Jo2BQGCD9gRf4ZeQX0s97sWUTQygbhfw2vCuGC1Q+7enLiYduPqljbi+c9PtJIthLdmp9Er8E5cd93/EzVw==
+
 vue-style-loader@^4.1.0:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-4.1.2.tgz#dedf349806f25ceb4e64f3ad7c0a44fba735fcf8"

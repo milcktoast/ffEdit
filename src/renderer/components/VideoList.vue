@@ -67,11 +67,15 @@ export default {
           width: 1,
           height: 1
         }
+        let seek = {
+          trim: [0, 0],
+          duration: 0
+        }
         let meta = {
           name, format, path, size, type, lastModified
         }
 
-        return this.createVideoItem(meta, bounds)
+        return this.createVideoItem(meta, bounds, seek)
       })
 
       event.preventDefault()

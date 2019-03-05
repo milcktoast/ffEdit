@@ -6,21 +6,27 @@
         <div v-if="isVideoLoaded">
           <video class="video-editor__viewer__element"
             :src="video.element.src" :muted="muted" />
-          <bounds-editor
+          <bounds-editor class="video-editor__bounds"
             :aspect="videoAspect" :targetAspect="targetAspect"
             :bounds="video.bounds" :displayBounds="videoDisplayBounds" />
         </div>
       </div>
+    </div>
+    <div v-if="isVideoLoaded">
+      <trim-editor class="video-editor__trim"
+        :trim="video.seek.trim" :duration="video.seek.duration" />
     </div>
   </div>
 </template>
 
 <script>
 import BoundsEditor from '@/components/BoundsEditor'
+import TrimEditor from '@/components/TrimEditor'
 
 export default {
   components: {
-    BoundsEditor
+    BoundsEditor,
+    TrimEditor
   },
 
   props: {
@@ -136,6 +142,14 @@ export default {
       width: 100%;
       height: 100%;
     }
+  }
+
+  &__trim {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
   }
 }
 </style>
