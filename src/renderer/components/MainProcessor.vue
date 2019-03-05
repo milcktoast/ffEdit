@@ -182,6 +182,8 @@ export default {
 
     serialize () {
       let { ipcRenderer } = this.$electron
+
+      let { output } = this
       let videos = this.videos.map((video) => {
         let { meta, bounds } = video
         return {
@@ -189,6 +191,7 @@ export default {
         }
       })
       let data = {
+        output,
         videos
       }
 
@@ -197,11 +200,13 @@ export default {
 
     deserialize (event, json) {
       let data = JSON.parse(json)
+      let { output } = data
       let videos = data.videos.map((video) => {
         let { meta, bounds } = video
         return this.createVideoItem(meta, bounds)
       })
 
+      Object.assign(this.output, output)
       this.videos = videos
     },
 

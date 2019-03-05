@@ -43,7 +43,7 @@
     </div>
     <div class="video-output__actions">
       <button v-if="!processor.isRunning" @click="processVideos">
-        Process
+        Encode
       </button>
       <button v-if="processor.isRunning" @click="processVideosCancel">
         Cancel
@@ -79,25 +79,42 @@ export default {
   },
 
   created () {
-    this.updateSize = debounce(this.updateSize.bind(this), 500)
-    Object.assign(this.size, this.output.size)
+    this.pushSize = debounce(this.pushSize.bind(this), 500)
+    this.syncSize()
   },
 
   methods: {
-    updateSize () {
+    syncSize () {
+      let { size, output } = this
+      let { width, height } = output.size
+      if (!width || !height) return
+
+      size.width = parseInt(width, 10)
+      size.height = parseInt(height, 10)
+    },
+
+    pushSize () {
       let { size, output } = this
       let { width, height } = size
       if (!width || !height) return
 
-      Object.assign(output.size, size)
+      output.size.width = parseInt(width, 10)
+      output.size.height = parseInt(height, 10)
     }
   },
 
   watch: {
+    'output.size': {
+      deep: false,
+      handler () {
+        this.syncSize()
+      }
+    },
+
     'size': {
       deep: true,
       handler () {
-        this.updateSize()
+        this.pushSize()
       }
     }
   }

@@ -61,13 +61,13 @@ function createMainWindow () {
 
 function createAppActions () {
   let fileTypeFilters = [{
-    name: 'JSON',
-    extensions: ['json']
+    name: 'ffEdit Project',
+    extensions: ['ffedit']
   }]
 
   return {
     createNewProject () {
-      store.set('openScenePath', null)
+      store.set('openProjectPath', null)
       createMainWindow()
     },
 
@@ -79,7 +79,7 @@ function createAppActions () {
       }, (fileNames) => {
         if (!(fileNames && fileNames.length)) return
         const fileName = fileNames[0]
-        store.set('openScenePath', fileName)
+        store.set('openProjectPath', fileName)
         openProjectFile(fileName)
       })
     },

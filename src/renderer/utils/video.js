@@ -1,5 +1,6 @@
 import path from 'path'
 import { spawn } from 'child_process'
+import mkdirp from 'mkdirp'
 import log from 'electron-log'
 
 const LOG_FFMPEG = false
@@ -43,6 +44,8 @@ export function createVideoEncodeStream (video, output) {
     '-vf', `crop=${cropStr},scale=${scaleStr}:flags=neighbor`,
     '-y', dest
   ]
+
+  mkdirp.sync(destBasePath)
 
   return spawn(ffmpeg, args)
 }
