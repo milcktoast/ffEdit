@@ -51,5 +51,10 @@ button {
   padding: 3px 8px;
   font-size: 14px;
   line-height: 1;
+
+  &.active {
+    background: rgba(#fff, 0.8);
+    color: #3b3b3b;
+  }
 }
 </style>

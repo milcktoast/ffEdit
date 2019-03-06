@@ -357,19 +357,32 @@ export default {
       ctx.stroke()
 
       // Center guides
+      let crossW = bounds.width * width * 0.5
+      let crossH = bounds.height * height * 0.5
+
       ctx.globalAlpha = 0.4
       ctx.translate(
         width * (left + (1 - (left + right)) / 2),
         height * (top + (1 - (top + bottom)) / 2))
 
       ctx.beginPath()
-      ctx.moveTo(0, -10)
-      ctx.lineTo(0, 10)
+      ctx.moveTo(-crossW / 3, -crossH)
+      ctx.lineTo(-crossW / 3, crossH)
       ctx.stroke()
 
       ctx.beginPath()
-      ctx.moveTo(-10, 0)
-      ctx.lineTo(10, 0)
+      ctx.moveTo(crossW / 3, -crossH)
+      ctx.lineTo(crossW / 3, crossH)
+      ctx.stroke()
+
+      ctx.beginPath()
+      ctx.moveTo(-crossW, -crossH / 3)
+      ctx.lineTo(crossW, -crossH / 3)
+      ctx.stroke()
+
+      ctx.beginPath()
+      ctx.moveTo(-crossW, crossH / 3)
+      ctx.lineTo(crossW, crossH / 3)
       ctx.stroke()
 
       ctx.restore()
@@ -435,9 +448,10 @@ export default {
 
       box-sizing: border-box;
       border: 1px solid #fff;
-      background: rgba(#fff, 0.1);
-      width: 8px;
-      height: 8px;
+      border-radius: 2px;
+      background: rgba(#fff, 0.2);
+      width: 10px;
+      height: 10px;
       transform: translate(-50%, -50%);
     }
 

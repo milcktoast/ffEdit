@@ -6,15 +6,27 @@
         <div v-if="isVideoLoaded">
           <video class="video-editor__viewer__element"
             :src="video.element.src" :muted="muted" />
-          <bounds-editor class="video-editor__bounds"
-            :aspect="videoAspect" :targetAspect="targetAspect"
-            :bounds="video.bounds" :displayBounds="videoDisplayBounds" />
+          <div v-if="(editMode === 'crop')">
+            <bounds-editor class="video-editor__bounds"
+              :aspect="videoAspect" :targetAspect="targetAspect"
+              :bounds="video.bounds" :displayBounds="videoDisplayBounds" />
+          </div>
         </div>
       </div>
     </div>
-    <div v-if="isVideoLoaded">
+    <div v-if="isVideoLoaded && (editMode === 'trim')">
       <trim-editor class="video-editor__trim"
         :trim="video.seek.trim" :duration="video.seek.duration" />
+    </div>
+    <div class="video-editor__actions">
+      <button :class="(editMode === 'trim' ? 'active' : '')"
+        @click="setEditMode('trim')">
+        Trim
+      </button>
+      <button :class="(editMode === 'crop' ? 'active' : '')"
+        @click="setEditMode('crop')">
+        Crop
+      </button>
     </div>
   </div>
 </template>
@@ -45,6 +57,7 @@ export default {
         width: 0,
         height: 0
       },
+      editMode: '',
       muted: true
     }
   },
@@ -103,6 +116,14 @@ export default {
   },
 
   methods: {
+    setEditMode (mode) {
+      if (this.editMode === mode) {
+        this.editMode = ''
+      } else {
+        this.editMode = mode
+      }
+    },
+
     handleResize (event) {
       this.updateViewerSize()
     },
@@ -126,10 +147,10 @@ export default {
 
   &__viewer {
     position: absolute;
-    top: 8px;
-    left: 8px;
-    width: calc(100% - 16px);
-    height: calc(100% - 16px);
+    top: 2px;
+    left: 2px;
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
 
     &__inner {
       position: relative;
@@ -146,10 +167,23 @@ export default {
 
   &__trim {
     position: absolute;
+    left: 10%;
+    bottom: 12px;
+
+    background: rgba(#111, 0.6);
+    border-radius: 8px;
+    padding: 6px;
+    width: 80%;
+    height: 36px;
+  }
+
+  &__actions {
+    position: absolute;
+    top: -36px;
     left: 0;
-    bottom: 0;
+    padding: 6px 20px;
     width: 100%;
-    height: 50px;
+    height: 32px;
   }
 }
 </style>
