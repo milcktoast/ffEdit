@@ -4,7 +4,7 @@
       <div class="video-editor__viewer__inner"
         :style="videoInnerStyle">
         <div v-if="isVideoLoaded">
-          <video class="video-editor__viewer__element"
+          <video ref="viewerVideo" class="video-editor__viewer__element"
             :src="video.element.src" :muted="muted" />
           <div v-if="(editMode === 'crop')">
             <bounds-editor class="video-editor__bounds"
@@ -124,6 +124,14 @@ export default {
       }
     },
 
+    seekVideo (time) {
+      let { viewerVideo } = this.$refs
+      if (!viewerVideo) return
+
+      let timeSeconds = time / 1000
+      viewerVideo.currentTime = timeSeconds
+    },
+
     handleResize (event) {
       this.updateViewerSize()
     },
@@ -136,6 +144,18 @@ export default {
 
       viewerSize.width = width
       viewerSize.height = height
+    }
+  },
+
+  watch: {
+    'video.seek.trim.start' () {
+      let { start } = this.video.seek.trim
+      this.seekVideo(start)
+    },
+
+    'video.seek.trim.end' () {
+      let { end } = this.video.seek.trim
+      this.seekVideo(end)
     }
   }
 }

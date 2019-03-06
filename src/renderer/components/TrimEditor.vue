@@ -22,7 +22,7 @@ export default {
   },
 
   props: {
-    trim: Array,
+    trim: Object,
     duration: Number
   },
 
@@ -33,7 +33,7 @@ export default {
   },
 
   created () {
-    this.pushTrim = debounce(this.pushTrim.bind(this), 500)
+    this.pushTrim = debounce(this.pushTrim.bind(this), 10)
     this.syncTrim()
   },
 
@@ -41,15 +41,15 @@ export default {
     syncTrim () {
       let { trim, trimValue } = this
 
-      trimValue[0] = trim[0]
-      trimValue[1] = trim[1]
+      trimValue[0] = trim.start
+      trimValue[1] = trim.end
     },
 
     pushTrim () {
       let { trim, trimValue } = this
 
-      trim[0] = trimValue[0]
-      trim[1] = trimValue[1]
+      trim.start = trimValue[0]
+      trim.end = trimValue[1]
     }
   },
 

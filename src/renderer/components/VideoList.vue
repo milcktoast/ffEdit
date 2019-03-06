@@ -68,8 +68,11 @@ export default {
           height: 1
         }
         let seek = {
-          trim: [0, 0],
-          duration: 0
+          duration: 0,
+          trim: {
+            start: 0,
+            end: 0
+          }
         }
         let meta = {
           name, format, path, size, type, lastModified

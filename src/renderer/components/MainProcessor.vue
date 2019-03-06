@@ -136,7 +136,7 @@ export default {
 
         if (!seek.duration) {
           seek.duration = durationMs
-          seek.trim[1] = durationMs
+          seek.trim.end = durationMs
         }
       })
 
