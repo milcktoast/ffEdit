@@ -49,11 +49,11 @@ export default {
       output: {
         format: 'mp4',
         destination: {
-          path: '~/Downloads/'
+          path: '~/Documents/Videos/'
         },
         size: {
-          width: 512,
-          height: 512
+          width: 1920,
+          height: 1080
         }
       },
       processor: {

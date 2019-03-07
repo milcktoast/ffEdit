@@ -35,6 +35,7 @@
 import BoundsEditor from '@/components/BoundsEditor'
 import TrimEditor from '@/components/TrimEditor'
 
+// FIXME: Compute video bounds without activating bounds editor
 export default {
   components: {
     BoundsEditor,

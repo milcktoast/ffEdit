@@ -51,7 +51,7 @@
     </div>
     <div v-if="processor.isRunning" class="video-output__status">
       <div class="video-output__status__progress">
-        {{ processor.active }} / {{ processor.total }}
+        {{ processor.active }} of {{ processor.total }}
       </div>
       <div class="video-output__status__spinner" />
     </div>
