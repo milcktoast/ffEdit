@@ -45,6 +45,7 @@ export function createVideoEncodeStream (video, output) {
     '-vf', `crop=${cropStr},scale=${scaleStr}:flags=neighbor`,
     '-ss', `${trim.start}`,
     '-t', `${trim.duration}`,
+    `${output.flags}`,
     '-y', dest
   ]
 

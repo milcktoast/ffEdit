@@ -21,6 +21,15 @@
           height
         </label>
       </div>
+      <div class="video-output__flags">
+        <h3 class="video-output__section-title">
+          Flags
+        </h3>
+        <label>
+          <textarea class="video-output__flags__input"
+            v-model="output.flags" />
+        </label>
+      </div>
       <div class="video-output__dest">
         <h3 class="video-output__section-title">
           Destination
@@ -148,6 +157,16 @@ export default {
     &__input {
       margin: 2px 8px 2px 0;
       width: 70px;
+    }
+  }
+
+  &__flags {
+    margin-bottom: 20px;
+
+    &__input {
+      margin: 2px 8px 2px 0;
+      width: 100%;
+      min-height: 60px;
     }
   }
 

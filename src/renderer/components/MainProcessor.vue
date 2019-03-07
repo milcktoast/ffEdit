@@ -48,6 +48,7 @@ export default {
       videos: [],
       output: {
         format: 'mp4',
+        flags: '',
         destination: {
           path: '~/Documents/Videos/'
         },

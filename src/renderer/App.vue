@@ -28,6 +28,7 @@ button {
 }
 
 input,
+textarea,
 select,
 button {
   outline: none;
@@ -38,6 +39,7 @@ button {
 }
 
 input,
+textarea,
 select {
   margin: 4px;
   background: #111;
