@@ -26,9 +26,10 @@ export function processVideo (video, output) {
 }
 
 export function createVideoEncodeStream (video, output) {
-  let { meta, size, bounds } = video
+  let { meta, size, bounds, seek } = video
 
   let crop = computeCrop(size, bounds)
+  let trim = computeSeekTrim(seek)
   let cropStr = `${crop.width}:${crop.height}:${crop.left}:${crop.top}`
   let scaleStr = `${output.size.width}:${output.size.height}`
 
@@ -42,6 +43,8 @@ export function createVideoEncodeStream (video, output) {
   let args = [
     '-i', src,
     '-vf', `crop=${cropStr},scale=${scaleStr}:flags=neighbor`,
+    '-ss', `${trim.start}`,
+    '-t', `${trim.duration}`,
     '-y', dest
   ]
 
@@ -51,6 +54,16 @@ export function createVideoEncodeStream (video, output) {
 }
 
 export function computeSeekTrim (seek) {
+  let { trim } = seek
+  let start = trim.start / 1000
+  let end = trim.end / 1000
+  let duration = end - start
+
+  return {
+    start,
+    end,
+    duration
+  }
 }
 
 export function computeCrop (size, bounds) {
