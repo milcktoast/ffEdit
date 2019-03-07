@@ -1,6 +1,7 @@
 <template>
   <div class="trim-editor">
-    <vue-slider class="trim-editor__slider" v-model="trimValue"
+    <vue-slider class="trim-editor__slider"
+      v-model="trimValue"
       :min="0" :max="duration"
       :dotSize="20" :duration="0">
       <template v-slot:tooltip="{ value }">
@@ -34,15 +35,16 @@ export default {
 
   created () {
     this.pushTrim = debounce(this.pushTrim.bind(this), 10)
-    this.syncTrim()
+    this.syncTrim(true)
   },
 
   methods: {
-    syncTrim () {
+    syncTrim (shouldForce = false) {
       let { trim, trimValue } = this
 
-      trimValue[0] = trim.start
-      trimValue[1] = trim.end
+      if (shouldForce || (trimValue[0] !== trim.start && trimValue[1] !== trim.end)) {
+        this.trimValue = [trim.start, trim.end]
+      }
     },
 
     pushTrim () {
