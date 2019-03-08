@@ -4,9 +4,9 @@
       {{ selectionDescriptor }}
     </div>
     <div class="processor-status__item">
-      {{ activeVideoDescriptor }} <span>•</span> {{ sizeDescriptor }}
+      {{ activeVideoDescriptor }} {{ sizeDescriptor }}
     </div>
-    <div class="processor-status__item">
+    <div class="processor-status__item" :title="output.destination.path">
       {{ outputDescriptor }}
     </div>
   </div>
@@ -14,7 +14,7 @@
 
 <script>
 import { basename as pathBasename } from 'path'
-import { computeCrop } from '@/utils/video'
+import { computeSeekTrim, computeCrop } from '@/utils/video'
 
 export default {
   props: {
@@ -35,13 +35,18 @@ export default {
       let { activeVideo } = this
       if (!activeVideo) return null
 
-      let { size, bounds } = activeVideo
+      let { size, bounds, seek } = activeVideo
+      let trim = computeSeekTrim(seek)
       let crop = computeCrop(size, bounds)
-      let boundsDesc = ['left', 'top', 'width', 'height']
+
+      let trimDesc = ['start', 'end', 'duration']
+        .map((n) => trim[n].toFixed(1))
+        .join(', ')
+      let cropDesc = ['left', 'top', 'width', 'height']
         .map((n) => Math.abs(crop[n]))
         .join(', ')
 
-      return `[ ${boundsDesc} ]`
+      return `[ ${trimDesc} ] [ ${cropDesc} ]`
     },
 
     sizeDescriptor () {
