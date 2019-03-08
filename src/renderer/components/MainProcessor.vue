@@ -1,6 +1,10 @@
 <template>
   <div class="main-processor" :style="mainStyle">
-    <div class="main-processor__tool-bar" />
+    <div class="main-processor__tool-bar">
+      <div v-if="projectFileName" class="main-processor__tool-bar__project-name">
+        {{ projectFileName }}
+      </div>
+    </div>
     <processor-status class="main-processor__status-bar"
       :activeVideo="activeVideo"
       :videos="videos"
@@ -45,6 +49,7 @@ export default {
     return {
       willDropVideos: false,
       activeVideoIndex: -1,
+      projectFileName: null,
       videos: [],
       output: {
         format: 'mp4',
@@ -106,8 +111,17 @@ export default {
   methods: {
     bindAppEvents () {
       let { ipcRenderer } = this.$electron
+      ipcRenderer.on('message', this.handleMessage.bind(this))
       ipcRenderer.on('serialize-project', this.serialize.bind(this))
       ipcRenderer.on('deserialize-project', this.deserialize.bind(this))
+    },
+
+    handleMessage (event, data) {
+      switch (data.type) {
+        case 'UPDATE_FILE_PATH':
+          this.updateFilePath(data)
+          break
+      }
     },
 
     triggerReady () {
@@ -151,6 +165,10 @@ export default {
       let video = document.createElement('video')
       video.src = `file://${src}`
       return video
+    },
+
+    updateFilePath ({ fileName }) {
+      this.projectFileName = fileName
     },
 
     selectVideo (index) {
@@ -213,7 +231,7 @@ export default {
         return this.createVideoItem({ meta, size, bounds, seek })
       })
 
-      Object.assign(this.output, output)
+      this.output = output
       this.videos = videos
     },
 
@@ -284,6 +302,15 @@ export default {
     width: 100%;
     height: $tool-height;
     -webkit-app-region: drag;
+
+    &__project-name {
+      position: absolute;
+      top: 6px;
+      left: 30%;
+      width: 40%;
+      color: #ddd;
+      text-align: center;
+    }
   }
 
   &__status-bar {

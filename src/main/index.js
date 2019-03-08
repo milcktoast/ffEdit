@@ -42,6 +42,8 @@ function createMainWindow () {
     backgroundColor: '#111',
     width: 1200,
     height: 600,
+    minWidth: 900,
+    minHeight: 400,
     titleBarStyle: 'hidden',
     useContentSize: true,
     webPreferences: {
