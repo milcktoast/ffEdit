@@ -56,9 +56,13 @@ export default {
       let { files } = event.dataTransfer
 
       let nextVideos = map.call(files, (file) => {
-        let { path, size, type, lastModified } = file
+        let { path, type } = file
         let [name, format] = file.name.split('.')
 
+        let size = {
+          width: 0,
+          height: 0
+        }
         let bounds = {
           top: 0,
           left: 0,
@@ -75,10 +79,10 @@ export default {
           }
         }
         let meta = {
-          name, format, path, size, type, lastModified
+          name, format, path, type
         }
 
-        return this.createVideoItem(meta, bounds, seek)
+        return this.createVideoItem({ meta, size, bounds, seek })
       })
 
       event.preventDefault()

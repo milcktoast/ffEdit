@@ -1,5 +1,5 @@
 import path from 'path'
-import { spawn } from 'child_process'
+import { exec } from 'child_process'
 import mkdirp from 'mkdirp'
 import log from 'electron-log'
 
@@ -14,7 +14,8 @@ export function processVideo (video, output) {
         log.info(`${data}`)
       })
     }
-    encoder.stderr.on('end', () => {
+
+    encoder.stderr.on('end', (code) => {
       resolve(video)
     })
   })
@@ -34,6 +35,8 @@ export function createVideoEncodeStream (video, output) {
   let scaleStr = `${output.size.width}:${output.size.height}`
 
   let src = meta.path
+  let flags = output.flags.replace('\n', ' ')
+
   let destBasePath = output.destination.path
     .replace('~', process.env['HOME'])
   let dest = path.resolve(
@@ -41,17 +44,19 @@ export function createVideoEncodeStream (video, output) {
     `./${meta.name}.${output.format}`)
 
   let args = [
-    '-i', src,
     '-vf', `crop=${cropStr},scale=${scaleStr}:flags=neighbor`,
     '-ss', `${trim.start}`,
-    '-t', `${trim.duration}`,
-    `${output.flags}`,
-    '-y', dest
+    '-t', `${trim.duration}`
   ]
 
-  mkdirp.sync(destBasePath)
+  let command = `${ffmpeg} ` +
+    `-i ${src} ${args.join(' ')} ${flags} ` +
+    `-y ${dest}`
 
-  return spawn(ffmpeg, args)
+  mkdirp.sync(destBasePath)
+  log.info(command)
+
+  return exec(command)
 }
 
 export function computeSeekTrim (seek) {
