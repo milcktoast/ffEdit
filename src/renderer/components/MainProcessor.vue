@@ -292,6 +292,7 @@ export default {
   width: 100%;
   height: 100%;
   color: #fff;
+  user-select: none;
 
   &__tool-bar {
     position: absolute;
@@ -301,7 +302,16 @@ export default {
     background: #3b3b3b;
     width: 100%;
     height: $tool-height;
-    -webkit-app-region: drag;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      -webkit-app-region: drag;
+    }
 
     &__project-name {
       position: absolute;
@@ -321,6 +331,7 @@ export default {
     background: #3b3b3b;
     width: 100%;
     height: $status-height;
+    -webkit-app-region: drag;
   }
 
   &__video-list {

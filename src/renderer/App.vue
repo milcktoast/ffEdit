@@ -25,6 +25,7 @@ button {
   border: 1px solid rgba(#fff, 0.2);
   border-radius: 4px;
   background: #676767;
+  -webkit-app-region: no-drag;
 }
 
 input,
