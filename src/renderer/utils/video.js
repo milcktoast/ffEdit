@@ -35,7 +35,7 @@ export function createVideoEncodeStream (video, output) {
   let scaleStr = `${output.size.width}:${output.size.height}`
 
   let src = meta.path
-  let flags = output.flags.replace('\n', ' ')
+  let flags = output.flags.replace(/\n+/g, ' ')
 
   let destBasePath = output.destination.path
     .replace('~', process.env['HOME'])
