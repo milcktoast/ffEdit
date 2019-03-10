@@ -57,6 +57,10 @@
       <button v-if="processor.isRunning" @click="processVideosCancel">
         Cancel
       </button>
+      <button :class="(processor.shouldShowLog ? 'active' : '')"
+        @click="toggleLog">
+        Log
+      </button>
     </div>
     <div v-if="processor.isRunning" class="video-output__status">
       <div class="video-output__status__progress">
@@ -109,6 +113,11 @@ export default {
 
       output.size.width = parseInt(width, 10)
       output.size.height = parseInt(height, 10)
+    },
+
+    toggleLog () {
+      let { processor } = this
+      processor.shouldShowLog = !processor.shouldShowLog
     }
   },
 
@@ -189,7 +198,7 @@ export default {
     top: -36px;
     left: 0;
     padding: 6px 20px;
-    width: 50%;
+    width: 80%;
     height: 32px;
   }
 

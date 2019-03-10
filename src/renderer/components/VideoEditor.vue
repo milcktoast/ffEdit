@@ -168,10 +168,10 @@ export default {
 
   &__viewer {
     position: absolute;
-    top: 2px;
-    left: 2px;
-    width: calc(100% - 4px);
-    height: calc(100% - 4px);
+    top: 6px;
+    left: 6px;
+    width: calc(100% - 12px);
+    height: calc(100% - 12px);
 
     &__inner {
       position: relative;

@@ -25,6 +25,14 @@
       :processVideosCancel="processVideosCancel"
       :processor="processor"
       :output="output" />
+    <div v-if="(processor.isRunning || processor.shouldShowLog)"
+      class="main-processor__log">
+      <div class="main-processor__log__inner">
+        <pre class="main-processor__log__data">
+          {{ processor.log }}
+        </pre>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -65,9 +73,11 @@ export default {
       processor: {
         isRunning: false,
         shouldCancel: false,
+        shouldShowLog: false,
         active: 0,
         complete: 0,
-        total: 0
+        total: 0,
+        log: ''
       }
     }
   },
@@ -244,6 +254,11 @@ export default {
       processor.shouldCancel = false
       processor.complete = 0
       processor.total = videos.length
+      processor.log = ''
+
+      const onData = (data) => {
+        processor.log += data + '\n'
+      }
 
       let index = 0
       const processUntilDone = () => {
@@ -253,7 +268,7 @@ export default {
         }
 
         processor.active = index + 1
-        let activeEncoder = this._activeEncoder = processVideo(nextVideo, output)
+        let activeEncoder = this._activeEncoder = processVideo(nextVideo, output, onData)
         return activeEncoder.then(() => {
           index++
           processor.complete++
@@ -355,6 +370,41 @@ export default {
     background: #212121;
     width: 240px;
     height: calc(100% - #{($tool-height + $status-height)});
+  }
+
+  &__log {
+    position: absolute;
+    z-index: 10;
+    top: $tool-height;
+    left: 0;
+    display: flex;
+    justify-content: flex-end;
+
+    background: rgba(#111, 0.4);
+    padding: 0;
+    width: 100%;
+    height: calc(100% - #{($tool-height + $status-height)});
+    backdrop-filter: blur(2px);
+
+    &__inner {
+      position: relative;
+      background: rgba(#111, 0.7);
+      padding: 0;
+      width: 100%;
+      max-width: calc(100% - 240px);
+    }
+
+    &__data {
+      overflow: auto;
+      margin: 0;
+      padding: 40px 20px;
+      width: 100%;
+      height: 100%;
+
+      color: #fff;
+      font: 13px/1 'Fira Mono', 'Monaco', monospace;
+      white-space: pre-wrap;
+    }
   }
 }
 </style>

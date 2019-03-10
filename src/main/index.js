@@ -48,7 +48,8 @@ function createMainWindow () {
     useContentSize: true,
     webPreferences: {
       webSecurity: false,
-      nodeIntegration: true
+      nodeIntegration: true,
+      experimentalFeatures: true
     }
   })
 

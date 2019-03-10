@@ -3,17 +3,15 @@ import { exec } from 'child_process'
 import mkdirp from 'mkdirp'
 import log from 'electron-log'
 
-const LOG_FFMPEG = false
 const ffmpeg = '/usr/local/bin/ffmpeg'
 
-export function processVideo (video, output) {
+export function processVideo (video, output, onData) {
   let encoder = createVideoEncodeStream(video, output)
   let res = new Promise((resolve, reject) => {
-    if (LOG_FFMPEG) {
-      encoder.stderr.on('data', (data) => {
-        log.info(`${data}`)
-      })
-    }
+    encoder.stderr.on('data', (data) => {
+      let dataStr = `${data}`
+      onData(dataStr)
+    })
 
     encoder.stderr.on('end', (code) => {
       resolve(video)
