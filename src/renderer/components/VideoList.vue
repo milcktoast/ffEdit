@@ -54,10 +54,12 @@ export default {
     handleDrop (event) {
       let { map } = Array.prototype
       let { files } = event.dataTransfer
+      let startIndex = this.videos.length
 
-      let nextVideos = map.call(files, (file) => {
+      let nextVideos = map.call(files, (file, i) => {
         let { path, type } = file
         let [name, format] = file.name.split('.')
+        let index = startIndex + i
 
         let size = {
           width: 0,
@@ -79,7 +81,7 @@ export default {
           }
         }
         let meta = {
-          name, format, path, type
+          name, format, path, type, index
         }
 
         return this.createVideoItem({ meta, size, bounds, seek })
