@@ -268,7 +268,9 @@ export default {
         }
 
         processor.active = index + 1
-        let activeEncoder = this._activeEncoder = processVideo(nextVideo, output, onData)
+        let activeEncoder = this._activeEncoder =
+          processVideo(nextVideo, output, index, onData)
+
         return activeEncoder.then(() => {
           index++
           processor.complete++

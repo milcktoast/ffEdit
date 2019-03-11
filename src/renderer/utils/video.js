@@ -5,8 +5,8 @@ import log from 'electron-log'
 
 const ffmpeg = '/usr/local/bin/ffmpeg'
 
-export function processVideo (video, output, onData) {
-  let encoder = createVideoEncodeStream(video, output)
+export function processVideo (video, output, index, onData) {
+  let encoder = createVideoEncodeStream(video, output, index)
   let res = new Promise((resolve, reject) => {
     encoder.stderr.on('data', (data) => {
       let dataStr = `${data}`
@@ -24,7 +24,7 @@ export function processVideo (video, output, onData) {
   }
 }
 
-export function createVideoEncodeStream (video, output) {
+export function createVideoEncodeStream (video, output, index) {
   let { meta, size, bounds, seek } = video
 
   let crop = computeCrop(size, bounds)
@@ -39,7 +39,7 @@ export function createVideoEncodeStream (video, output) {
     .replace('~', process.env['HOME'])
   let dest = path.resolve(
     destBasePath,
-    `./${meta.name}.${output.format}`)
+    `./${index}_${meta.name}.${output.format}`)
 
   let args = [
     '-vf', `crop=${cropStr},scale=${scaleStr}:flags=neighbor`,
