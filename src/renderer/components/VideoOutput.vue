@@ -178,6 +178,8 @@ export default {
     &__input {
       margin: 2px 8px 2px 0;
       width: 100%;
+      max-width: 100%;
+      min-width: 100%;
       min-height: 60px;
     }
   }
