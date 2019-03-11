@@ -19,13 +19,15 @@
         :trim="video.seek.trim" :duration="video.seek.duration" />
     </div>
     <div class="video-editor__actions">
-      <button :class="(editMode === 'trim' ? 'active' : '')"
+      <button title="Trim"
+        :class="(editMode === 'trim' ? 'active' : '')"
         @click="setEditMode('trim')">
-        Trim
+        <span class="icon-scissors" />
       </button>
-      <button :class="(editMode === 'crop' ? 'active' : '')"
+      <button title="Crop"
+        :class="(editMode === 'crop' ? 'active' : '')"
         @click="setEditMode('crop')">
-        Crop
+        <span class="icon-crop" />
       </button>
     </div>
   </div>

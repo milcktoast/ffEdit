@@ -51,15 +51,18 @@
       </div>
     </div>
     <div class="video-output__actions">
-      <button v-if="!processor.isRunning" @click="processVideos">
-        Encode
+      <button v-if="!processor.isRunning" title="Encode"
+        @click="processVideos">
+        <span class="icon-play" />
       </button>
-      <button v-if="processor.isRunning" @click="processVideosCancel">
-        Cancel
+      <button v-if="processor.isRunning" title="Stop"
+        @click="processVideosCancel">
+        <span class="icon-stop" />
       </button>
-      <button :class="(processor.shouldShowLog ? 'active' : '')"
+      <button title="Log"
+        :class="((processor.isRunning || processor.shouldShowLog) ? 'active' : '')"
         @click="toggleLog">
-        Log
+        <span class="icon-file-text" />
       </button>
     </div>
     <div v-if="processor.isRunning" class="video-output__status">

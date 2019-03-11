@@ -21,9 +21,9 @@
       </li>
     </ul>
     <div class="video-list__actions">
-      <button @click="removeSelectedVideos"
-        title="Remove selected videos">
-        –
+      <button title="Remove selected videos"
+        @click="removeSelectedVideos">
+        <span class="icon-minus" />
       </button>
     </div>
   </div>
@@ -162,6 +162,10 @@ export default {
     padding: 6px 20px;
     width: 100%;
     height: 32px;
+
+    [class^="icon-"], [class*=" icon-"] {
+      font-size: 10px;
+    }
   }
 }
 </style>

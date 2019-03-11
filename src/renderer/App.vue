@@ -11,6 +11,8 @@
 </script>
 
 <style lang="scss">
+@import './assets/fonts/icomoon/index';
+
 body {
   background: #212121;
   color: #fff;
