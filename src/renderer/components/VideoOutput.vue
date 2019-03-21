@@ -23,11 +23,23 @@
       </div>
       <div class="video-output__flags">
         <h3 class="video-output__section-title">
-          Flags
+          Video flags
         </h3>
         <label>
           <textarea class="video-output__flags__input"
-            v-model="output.flags" />
+            v-model="output.video.flags" />
+        </label>
+      </div>
+      <div class="video-output__format">
+        <h3 class="video-output__section-title">
+          Video format
+        </h3>
+        <label>
+          <select class="video-output__format__input"
+            v-model="output.video.format">
+            <option value="mp4">mp4</option>
+            <option value="webm">webm</option>
+          </select>
         </label>
       </div>
       <div class="video-output__dest">
@@ -39,14 +51,6 @@
           <input class="video-output__dest__input"
             type="text"
             v-model="output.destination.path" />
-        </label>
-        <label>
-          <select class="video-output__format__input"
-            v-model="output.format">
-            <option value="mp4">mp4</option>
-            <option value="webm">webm</option>
-          </select>
-          format
         </label>
       </div>
     </div>
@@ -184,17 +188,19 @@ export default {
     }
   }
 
+  &__format {
+    margin-bottom: 20px;
+
+    &__input {
+      margin: 2px 8px 2px 0;
+      width: 70px;
+    }
+  }
+
   &__dest {
     &__input {
       margin: 2px 8px 2px 0;
       width: 100%;
-    }
-  }
-
-  &__format {
-    &__input {
-      margin: 2px 8px 2px 0;
-      width: 70px;
     }
   }
 

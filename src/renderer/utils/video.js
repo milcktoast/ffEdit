@@ -33,13 +33,13 @@ export function createVideoEncodeStream (video, output) {
   let scaleStr = `${output.size.width}:${output.size.height}`
 
   let src = meta.path
-  let flags = output.flags.replace(/\n+/g, ' ')
+  let flags = output.video.flags.replace(/\n+/g, ' ')
 
   let destBasePath = output.destination.path
     .replace('~', process.env['HOME'])
   let dest = path.resolve(
     destBasePath,
-    `./${meta.index}_${meta.name}.${output.format}`)
+    `./${meta.index}_${meta.name}.${output.video.format}`)
 
   let args = [
     '-vf', `crop=${cropStr},scale=${scaleStr}:flags=neighbor`,

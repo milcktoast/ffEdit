@@ -60,8 +60,14 @@ export default {
       projectFileName: null,
       videos: [],
       output: {
-        format: 'mp4',
-        flags: '',
+        video: {
+          format: 'mp4',
+          flags: ''
+        },
+        poster: {
+          format: 'jpg',
+          flags: ''
+        },
         destination: {
           path: '~/Documents/Videos/'
         },
