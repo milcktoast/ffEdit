@@ -6,14 +6,21 @@ import log from 'electron-log'
 const ffmpeg = '/usr/local/bin/ffmpeg'
 
 export function processVideo (video, output, onData) {
-  let encoder = createVideoEncodeStream(video, output)
+  return createEncoder('video', output, video, onData)
+}
+
+function createEncoder (outputTarget, output, video, onData) {
+  let encoder = createEncodeStream(outputTarget, output, video)
+
   let res = new Promise((resolve, reject) => {
-    encoder.stderr.on('data', (data) => {
+    let stream = encoder.run()
+
+    stream.stderr.on('data', (data) => {
       let dataStr = `${data}`
       onData(dataStr)
     })
 
-    encoder.stderr.on('end', (code) => {
+    stream.stderr.on('end', (code) => {
       resolve(video)
     })
   })
@@ -24,7 +31,7 @@ export function processVideo (video, output, onData) {
   }
 }
 
-export function createVideoEncodeStream (video, output) {
+export function createEncodeStream (outputTarget, output, video) {
   let { meta, size, bounds, seek } = video
 
   let crop = computeCrop(size, bounds)
@@ -32,14 +39,14 @@ export function createVideoEncodeStream (video, output) {
   let cropStr = `${crop.width}:${crop.height}:${crop.left}:${crop.top}`
   let scaleStr = `${output.size.width}:${output.size.height}`
 
+  let { flags, format } = output[outputTarget]
   let src = meta.path
-  let flags = output.video.flags.replace(/\n+/g, ' ')
 
   let destBasePath = output.destination.path
     .replace('~', process.env['HOME'])
   let dest = path.resolve(
     destBasePath,
-    `./${meta.index}_${meta.name}.${output.video.format}`)
+    `./${meta.index}_${meta.name}.${format}`)
 
   let args = [
     '-vf', `crop=${cropStr},scale=${scaleStr}:flags=neighbor`,
@@ -47,14 +54,27 @@ export function createVideoEncodeStream (video, output) {
     '-t', `${trim.duration}`
   ]
 
+  let commandFlags = flags.replace(/\n+/g, ' ')
   let command = `${ffmpeg} ` +
-    `-i ${src} ${args.join(' ')} ${flags} ` +
+    `-i ${src} ${args.join(' ')} ${commandFlags} ` +
     `-y ${dest}`
 
-  mkdirp.sync(destBasePath)
-  log.info(command)
+  let stream = null
+  function run () {
+    mkdirp.sync(destBasePath)
+    log.info(command)
+    stream = exec(command)
+    return stream
+  }
 
-  return exec(command)
+  function kill () {
+    if (stream) stream.kill()
+  }
+
+  return {
+    run,
+    kill
+  }
 }
 
 export function computeSeekTrim (seek) {

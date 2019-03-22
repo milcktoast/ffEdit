@@ -256,6 +256,7 @@ export default {
       let { output, processor } = this
       if (processor.isRunning) return
 
+      let index = 0
       processor.isRunning = true
       processor.shouldCancel = false
       processor.complete = 0
@@ -266,22 +267,29 @@ export default {
         processor.log += data + '\n'
       }
 
-      let index = 0
+      const setActive = (encoder) => {
+        processor.active = index + 1
+        this._activeEncoder = encoder
+      }
+
       const processUntilDone = () => {
         let nextVideo = videos[index]
         if (!nextVideo || processor.shouldCancel) {
           return Promise.resolve()
         }
 
-        processor.active = index + 1
-        let activeEncoder = this._activeEncoder =
-          processVideo(nextVideo, output, onData)
+        let activeEncoder = processVideo(nextVideo, output, onData)
+        setActive(activeEncoder)
 
-        return activeEncoder.then(() => {
-          index++
-          processor.complete++
-          return processUntilDone()
-        })
+        return activeEncoder
+          .then(() => {
+
+          })
+          .then(() => {
+            index++
+            processor.complete++
+            return processUntilDone()
+          })
       }
 
       return processUntilDone().then(() => {

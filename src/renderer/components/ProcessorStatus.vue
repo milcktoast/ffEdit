@@ -61,7 +61,7 @@ export default {
 
     outputDescriptor () {
       let { enabledVideos, output } = this
-      let { format } = output
+      let { format } = output.video
       let { path } = output.destination
       let truncatedPath = pathBasename(path)
 

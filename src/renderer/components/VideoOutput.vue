@@ -4,6 +4,7 @@
       Output
     </h2>
     <div class="video-output__controls">
+      <!-- Size -->
       <div class="video-output__size">
         <h3 class="video-output__section-title">
           Size
@@ -21,18 +22,11 @@
           height
         </label>
       </div>
-      <div class="video-output__flags">
-        <h3 class="video-output__section-title">
-          Video flags
-        </h3>
-        <label>
-          <textarea class="video-output__flags__input"
-            v-model="output.video.flags" />
-        </label>
-      </div>
+
+      <!-- Video -->
       <div class="video-output__format">
         <h3 class="video-output__section-title">
-          Video format
+          Video format + flags
         </h3>
         <label>
           <select class="video-output__format__input"
@@ -41,7 +35,32 @@
             <option value="webm">webm</option>
           </select>
         </label>
+        <label>
+          <textarea class="video-output__flags__input"
+            v-model="output.video.flags" />
+        </label>
       </div>
+
+      <!-- Poster -->
+      <div class="video-output__format">
+        <h3 class="video-output__section-title">
+          Poster format + flags
+        </h3>
+        <label>
+          <select class="video-output__format__input"
+            v-model="output.poster.format">
+            <option value="">none</option>
+            <option value="jpg">jpg</option>
+            <option value="png">png</option>
+          </select>
+        </label>
+        <label>
+          <textarea class="video-output__flags__input"
+            v-model="output.poster.flags" />
+        </label>
+      </div>
+
+      <!-- Destination -->
       <div class="video-output__dest">
         <h3 class="video-output__section-title">
           Destination
@@ -54,6 +73,8 @@
         </label>
       </div>
     </div>
+
+    <!-- Actions -->
     <div class="video-output__actions">
       <button v-if="!processor.isRunning" title="Encode"
         @click="processVideos">
@@ -151,14 +172,27 @@ export default {
   position: relative;
 
   &__title {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
     margin: 0;
+    background: rgba(#212121, 0.8);
     padding: 10px 20px;
+    width: calc(100% - 20px);
     font-weight: normal;
+    backdrop-filter: blur(2px);
   }
 
   &__controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: auto;
     margin: 0;
-    padding: 8px 20px;
+    padding: 48px 20px 18px;
+    width: 100%;
+    height: 100%;
   }
 
   &__section-title {
