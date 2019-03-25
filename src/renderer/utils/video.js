@@ -52,15 +52,24 @@ export function createEncodeStream (outputTarget, output, video) {
     destBasePath,
     `./${meta.index}_${meta.name}.${format}`)
 
+  let argsUser = flags.replace(/\n+/g, ' ')
+    .trim()
+    .split(' ')
+
+  let vFiltersUser = spliceArg(argsUser, '-vf')
+  let vFilters = [
+    `crop=${cropStr},scale=${scaleStr}:flags=neighbor`,
+    vFiltersUser
+  ].filter(Boolean).join(',')
+
   let args = [
-    '-vf', `crop=${cropStr},scale=${scaleStr}:flags=neighbor`,
+    '-vf', vFilters,
     '-ss', `${trim.start}`,
     '-t', `${trim.duration}`
   ]
 
-  let commandFlags = flags.replace(/\n+/g, ' ')
   let command = `${ffmpeg} ` +
-    `-i ${src} ${args.join(' ')} ${commandFlags} ` +
+    `-i ${src} ${args.join(' ')} ${argsUser.join(' ')} ` +
     `-y ${dest}`
 
   let stream = null
@@ -79,6 +88,13 @@ export function createEncodeStream (outputTarget, output, video) {
     run,
     kill
   }
+}
+
+function spliceArg (args, key) {
+  let index = args.indexOf(key)
+  if (index === -1) return null
+
+  return args.splice(index, 2)[1]
 }
 
 export function computeSeekTrim (seek) {
