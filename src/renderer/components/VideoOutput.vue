@@ -34,6 +34,7 @@
             <option value="mp4">mp4</option>
             <option value="webm">webm</option>
           </select>
+          <input type="checkbox" v-model="output.video.enabled" />
         </label>
         <label>
           <textarea class="video-output__flags__input"
@@ -49,10 +50,10 @@
         <label>
           <select class="video-output__format__input"
             v-model="output.poster.format">
-            <option value="">none</option>
             <option value="jpg">jpg</option>
             <option value="png">png</option>
           </select>
+          <input type="checkbox" v-model="output.poster.enabled" />
         </label>
         <label>
           <textarea class="video-output__flags__input"

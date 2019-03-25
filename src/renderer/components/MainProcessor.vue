@@ -38,7 +38,7 @@
 
 <script>
 import { loadVideo } from '@/utils/resource'
-import { processVideo } from '@/utils/video'
+import { processVideo, processPoster } from '@/utils/video'
 
 import VideoList from '@/components/VideoList'
 import VideoOutput from '@/components/VideoOutput'
@@ -61,10 +61,12 @@ export default {
       videos: [],
       output: {
         video: {
+          enabled: true,
           format: 'mp4',
           flags: ''
         },
         poster: {
+          enabled: true,
           format: 'jpg',
           flags: ''
         },
@@ -267,9 +269,24 @@ export default {
         processor.log += data + '\n'
       }
 
-      const setActive = (encoder) => {
+      const processMedia = (nextVideo) => {
         processor.active = index + 1
-        this._activeEncoder = encoder
+
+        let videoEncoder = output.video.enabled
+          ? processVideo(output, nextVideo, onData)
+          : Promise.resolve()
+        this._activeEncoder = videoEncoder
+
+        return videoEncoder.then(() => {
+          if (processor.shouldCancel) return
+
+          let posterEncoder = output.poster.enabled
+            ? processPoster(output, nextVideo, onData)
+            : Promise.resolve()
+          this._activeEncoder = posterEncoder
+
+          return posterEncoder
+        })
       }
 
       const processUntilDone = () => {
@@ -278,13 +295,7 @@ export default {
           return Promise.resolve()
         }
 
-        let activeEncoder = processVideo(nextVideo, output, onData)
-        setActive(activeEncoder)
-
-        return activeEncoder
-          .then(() => {
-
-          })
+        return processMedia(nextVideo)
           .then(() => {
             index++
             processor.complete++

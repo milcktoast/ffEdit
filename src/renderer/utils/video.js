@@ -5,8 +5,12 @@ import log from 'electron-log'
 
 const ffmpeg = '/usr/local/bin/ffmpeg'
 
-export function processVideo (video, output, onData) {
+export function processVideo (output, video, onData) {
   return createEncoder('video', output, video, onData)
+}
+
+export function processPoster (output, video, onData) {
+  return createEncoder('poster', output, video, onData)
 }
 
 function createEncoder (outputTarget, output, video, onData) {

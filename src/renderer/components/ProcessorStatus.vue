@@ -61,13 +61,25 @@ export default {
 
     outputDescriptor () {
       let { enabledVideos, output } = this
-      let { format } = output.video
       let { path } = output.destination
+
+      let outputCount = (output.video.enabled || output.poster.enabled)
+        ? enabledVideos.length : null
+      if (!outputCount) return ''
+
+      let outputLabel = [
+        output.video.enabled && pluralize('video', 'videos', outputCount),
+        output.poster.enabled && pluralize('poster', 'posters', outputCount)
+      ].filter(Boolean).join(' + ')
       let truncatedPath = pathBasename(path)
 
-      return `${enabledVideos.length} videos to .../${truncatedPath}/[name].${format}`
+      return `${outputCount} ${outputLabel} to ...${truncatedPath}`
     }
   }
+}
+
+function pluralize (singular, plural, count) {
+  return count === 1 ? singular : plural
 }
 </script>
 
