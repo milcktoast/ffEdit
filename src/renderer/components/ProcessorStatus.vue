@@ -15,6 +15,7 @@
 <script>
 import { basename as pathBasename } from 'path'
 import { computeSeekTrim, computeCrop } from '@/utils/video'
+import { pluralize } from '@/utils/string'
 
 export default {
   props: {
@@ -76,10 +77,6 @@ export default {
       return `${outputCount} ${outputLabel} to ...${truncatedPath}`
     }
   }
-}
-
-function pluralize (singular, plural, count) {
-  return count === 1 ? singular : plural
 }
 </script>
 

@@ -39,6 +39,7 @@
 <script>
 import { loadVideo } from '@/utils/resource'
 import { processVideo, processPoster } from '@/utils/video'
+import { pluralize } from '@/utils/string'
 
 import VideoList from '@/components/VideoList'
 import VideoOutput from '@/components/VideoOutput'
@@ -156,6 +157,7 @@ export default {
       }
 
       // TODO: Cleanup setting initial seek
+      // TODO: Handle missing file
       loadVideo(element.src).then(() => {
         let { videoWidth, videoHeight, duration } = element
         let durationMs = Math.floor(duration * 1000)
@@ -306,6 +308,9 @@ export default {
       return processUntilDone().then(() => {
         this._activeEncoder = null
         processor.isRunning = false
+        if (!document.hasFocus()) {
+          this.createProcessingCompleteNotification()
+        }
       })
     },
 
@@ -315,6 +320,18 @@ export default {
       processor.isRunning = false
       processor.shouldCancel = true
       this._activeEncoder.kill()
+    },
+
+    createProcessingCompleteNotification () {
+      let { enabledVideos } = this
+      let videosCount = enabledVideos.length
+      let videosLabel = pluralize('video', 'videos', videosCount)
+
+      let notif = new Notification('Processing Complete', {
+        body: `Finished processing ${videosCount} ${videosLabel}`
+      })
+
+      return notif
     }
   }
 }
