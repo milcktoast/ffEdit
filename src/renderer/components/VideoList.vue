@@ -107,16 +107,18 @@ export default {
 <style lang="scss">
 .video-list {
   position: relative;
+  overflow: auto;
 
   &__title {
-    position: absolute;
+    position: sticky;
     z-index: 1;
     top: 0;
     left: 0;
     margin: 0;
     background: rgba(#212121, 0.8);
+    backdrop-filter: blur(2px);
     padding: 10px 20px;
-    width: calc(100% - 20px);
+    width: 100%;
     font-weight: normal;
   }
 
@@ -124,12 +126,10 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    overflow: auto;
     margin: 0;
     padding: 40px 0 0;
     width: 100%;
     height: 100%;
-    backdrop-filter: blur(2px);
     list-style: none;
   }
 

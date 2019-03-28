@@ -171,16 +171,17 @@ export default {
 <style lang="scss">
 .video-output {
   position: relative;
+  overflow: auto;
 
   &__title {
-    position: absolute;
+    position: sticky;
     z-index: 1;
     top: 0;
     left: 0;
     margin: 0;
     background: rgba(#212121, 0.8);
     padding: 10px 20px;
-    width: calc(100% - 20px);
+    width: 100%;
     font-weight: normal;
     backdrop-filter: blur(2px);
   }
@@ -189,7 +190,6 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    overflow: auto;
     margin: 0;
     padding: 48px 20px 18px;
     width: 100%;
