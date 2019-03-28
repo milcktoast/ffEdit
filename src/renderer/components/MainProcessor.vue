@@ -1,11 +1,15 @@
 <template>
   <div class="main-processor" :style="mainStyle">
-    <div class="main-processor__tool-bar">
-      <div v-if="projectFileName" class="main-processor__tool-bar__project-name">
-        {{ projectFileName }}
-      </div>
-    </div>
-    <processor-status class="main-processor__status-bar"
+    <processor-toolbar class="main-processor__toolbar"
+      :removeSelectedVideos="removeSelectedVideos"
+      :setEditMode="setEditMode"
+      :processVideos="processVideos"
+      :processVideosCancel="processVideosCancel"
+      :projectFileName="projectFileName"
+      :editMode="editMode"
+      :processor="processor"
+      :output="output" />
+    <processor-status class="main-processor__status"
       :activeVideo="activeVideo"
       :videos="videos"
       :selectedVideos="selectedVideos"
@@ -18,11 +22,10 @@
       :createVideoItem="createVideoItem"
       :videos="videos" />
     <video-editor class="main-processor__video-editor"
+      :editMode="editMode"
       :targetAspect="outputAspect"
       :video="activeVideo" />
     <video-output class="main-processor__video-output"
-      :processVideos="processVideos"
-      :processVideosCancel="processVideosCancel"
       :processor="processor"
       :output="output" />
     <div v-if="(processor.isRunning || processor.shouldShowLog)"
@@ -44,6 +47,7 @@ import { pluralize } from '@/utils/string'
 import VideoList from '@/components/VideoList'
 import VideoOutput from '@/components/VideoOutput'
 import VideoEditor from '@/components/VideoEditor'
+import ProcessorToolbar from '@/components/ProcessorToolbar'
 import ProcessorStatus from '@/components/ProcessorStatus'
 
 export default {
@@ -51,6 +55,7 @@ export default {
     VideoList,
     VideoOutput,
     VideoEditor,
+    ProcessorToolbar,
     ProcessorStatus
   },
 
@@ -59,6 +64,7 @@ export default {
       willDropVideos: false,
       activeVideoIndex: -1,
       projectFileName: null,
+      editMode: '',
       videos: [],
       output: {
         video: {
@@ -225,6 +231,14 @@ export default {
       this.activeVideoIndex = -1
     },
 
+    setEditMode (mode) {
+      if (this.editMode === mode) {
+        this.editMode = ''
+      } else {
+        this.editMode = mode
+      }
+    },
+
     serialize () {
       let { ipcRenderer } = this.$electron
 
@@ -353,7 +367,7 @@ export default {
   color: #fff;
   user-select: none;
 
-  &__tool-bar {
+  &__toolbar {
     position: absolute;
     top: 0;
     left: 0;
@@ -371,18 +385,9 @@ export default {
       height: 100%;
       -webkit-app-region: drag;
     }
-
-    &__project-name {
-      position: absolute;
-      top: 6px;
-      left: 30%;
-      width: 40%;
-      color: #ddd;
-      text-align: center;
-    }
   }
 
-  &__status-bar {
+  &__status {
     position: absolute;
     bottom: 0;
     left: 0;

@@ -20,12 +20,6 @@
         </label>
       </li>
     </ul>
-    <div class="video-list__actions">
-      <button title="Remove selected videos"
-        @click="removeSelectedVideos">
-        <span class="icon-minus" />
-      </button>
-    </div>
   </div>
 </template>
 
@@ -35,7 +29,6 @@ export default {
     selectVideo: Function,
     selectToVideo: Function,
     activeVideoIndex: Number,
-    removeSelectedVideos: Function,
     createVideoItem: Function,
     videos: Array
   },
@@ -167,19 +160,6 @@ export default {
       > input {
         border: none;
       }
-    }
-  }
-
-  &__actions {
-    position: absolute;
-    top: -36px;
-    left: 0;
-    padding: 6px 20px;
-    width: 100%;
-    height: 32px;
-
-    [class^="icon-"], [class*=" icon-"] {
-      font-size: 10px;
     }
   }
 }

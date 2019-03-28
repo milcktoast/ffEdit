@@ -18,18 +18,6 @@
       <trim-editor class="video-editor__trim"
         :trim="video.seek.trim" :duration="video.seek.duration" />
     </div>
-    <div class="video-editor__actions">
-      <button title="Trim"
-        :class="(editMode === 'trim' ? 'active' : '')"
-        @click="setEditMode('trim')">
-        <span class="icon-scissors" />
-      </button>
-      <button title="Crop"
-        :class="(editMode === 'crop' ? 'active' : '')"
-        @click="setEditMode('crop')">
-        <span class="icon-crop" />
-      </button>
-    </div>
   </div>
 </template>
 
@@ -45,6 +33,7 @@ export default {
   },
 
   props: {
+    editMode: String,
     targetAspect: Number,
     video: Object
   },
@@ -60,7 +49,6 @@ export default {
         width: 0,
         height: 0
       },
-      editMode: '',
       muted: true
     }
   },
@@ -119,14 +107,6 @@ export default {
   },
 
   methods: {
-    setEditMode (mode) {
-      if (this.editMode === mode) {
-        this.editMode = ''
-      } else {
-        this.editMode = mode
-      }
-    },
-
     seekVideo (time) {
       let { viewerVideo } = this.$refs
       if (!viewerVideo) return
