@@ -64,9 +64,17 @@ export function createEncodeStream (outputTarget, output, video) {
 
   let args = [
     '-vf', vFilters,
-    '-ss', `${trim.start}`,
-    '-t', `${trim.duration}`
+    '-ss', `${trim.start}`
   ]
+
+  switch (outputTarget) {
+    case 'video':
+      args.push('-t', `${trim.duration}`)
+      break
+    case 'poster':
+      args.push('-vframes', '1')
+      break
+  }
 
   let command = `${ffmpeg} ` +
     `-i ${src} ${args.join(' ')} ${argsUser.join(' ')} ` +
