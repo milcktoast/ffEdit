@@ -108,6 +108,7 @@ export default {
   }
 
   &__output {
+    position: relative;
     padding: 6px 20px;
     width: 240px;
   }
