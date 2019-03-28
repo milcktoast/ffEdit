@@ -8,6 +8,7 @@ import {
   Menu
 } from 'electron'
 import Store from 'electron-store'
+import windowStateKeeper from 'electron-window-state'
 
 import {
   readFile,
@@ -38,10 +39,17 @@ const store = new Store()
 function createMainWindow () {
   if (appWindows.main != null) return
 
+  let mainWindowState = windowStateKeeper({
+    defaultWidth: 1200,
+    defaultHeight: 600
+  })
+
   let main = appWindows.main = new BrowserWindow({
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
     backgroundColor: '#111',
-    width: 1200,
-    height: 600,
     minWidth: 900,
     minHeight: 400,
     titleBarStyle: 'hidden',
@@ -53,6 +61,7 @@ function createMainWindow () {
     }
   })
 
+  mainWindowState.manage(main)
   main.loadURL(winURL)
   // setMenuState('create-project', 'enabled', false)
 
