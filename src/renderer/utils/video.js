@@ -52,33 +52,35 @@ export function createEncodeStream (outputTarget, output, video) {
     destBasePath,
     `./${meta.index}_${meta.name}.${format}`)
 
-  let argsUser = flags.replace(/\n+/g, ' ')
+  let userOutputArgs = flags.replace(/\n+/g, ' ')
     .trim()
     .split(' ')
 
-  let vFiltersUser = spliceArg(argsUser, '-vf')
+  let vFiltersUser = spliceArg(userOutputArgs, '-vf')
   let vFilters = [
     `crop=${cropStr},scale=${scaleStr}:flags=neighbor`,
     vFiltersUser
   ].filter(Boolean).join(',')
 
-  let args = [
-    '-vf', vFilters,
+  let inputArgs = [
     '-ss', `${trim.start}`
+  ]
+  let outputArgs = [
+    '-vf', vFilters
   ]
 
   switch (outputTarget) {
     case 'video':
-      args.push('-t', `${trim.duration}`)
+      inputArgs.push('-t', `${trim.duration}`)
       break
     case 'poster':
-      args.push('-vframes', '1')
+      inputArgs.push('-vframes', '1')
       break
   }
 
   let command = `${ffmpeg} ` +
-    `-i ${src} ${args.join(' ')} ${argsUser.join(' ')} ` +
-    `-y ${dest}`
+    `${inputArgs.join(' ')} -i ${src} ` +
+    `${outputArgs.join(' ')} ${userOutputArgs.join(' ')} -y ${dest}`
 
   let stream = null
   function run () {
