@@ -286,6 +286,8 @@ export default {
 
     updateBoundsFromHandle (handleName, handlePosition) {
       let { bounds } = this
+      let h2 = bounds.height / 2
+      let w2 = bounds.width / 2
 
       switch (handleName) {
         case 'top-left':
@@ -305,8 +307,6 @@ export default {
           bounds.right = 1 - handlePosition[0]
           break
         case 'center':
-          let h2 = bounds.height / 2
-          let w2 = bounds.width / 2
           bounds.top = handlePosition[1] - h2
           bounds.bottom = 1 - (handlePosition[1] + h2)
           bounds.left = handlePosition[0] - w2
@@ -390,17 +390,17 @@ export default {
   },
 
   watch: {
-    'aspect' () {
+    aspect () {
       this.fitBoundsToAspect()
       this.updateUI()
     },
 
-    'targetAspect' () {
+    targetAspect () {
       this.fitBoundsToAspect()
       this.updateUI()
     },
 
-    'bounds': {
+    bounds: {
       deep: true,
       handler () {
         this.fitBoundsToAspect()
@@ -408,7 +408,7 @@ export default {
       }
     },
 
-    'displayBounds': {
+    displayBounds: {
       deep: true,
       handler () {
         this.updateUI()

@@ -47,7 +47,7 @@ export function createEncodeStream (outputTarget, output, video) {
   let src = meta.path
 
   let destBasePath = output.destination.path
-    .replace('~', process.env['HOME'])
+    .replace('~', process.env.HOME)
   let dest = path.resolve(
     destBasePath,
     `./${meta.index}_${meta.name}.${format}`)

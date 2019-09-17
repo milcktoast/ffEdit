@@ -31,7 +31,7 @@ if (process.env.NODE_ENV !== 'development') {
 const appWindows = {}
 const appMenus = {}
 const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
+  ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`
 
 const store = new Store()

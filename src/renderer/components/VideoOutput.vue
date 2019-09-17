@@ -128,7 +128,7 @@ export default {
       }
     },
 
-    'size': {
+    size: {
       deep: true,
       handler () {
         this.pushSize()

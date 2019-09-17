@@ -56,14 +56,14 @@ export default {
   },
 
   watch: {
-    'trim': {
+    trim: {
       deep: false,
       handler () {
         this.syncTrim()
       }
     },
 
-    'trimValue': {
+    trimValue: {
       deep: true,
       handler () {
         this.pushTrim()

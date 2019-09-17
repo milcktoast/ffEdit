@@ -1,5 +1,5 @@
 export function createMenuTemplate (app, actions) {
-  let template = [
+  const template = [
     {
       label: 'File',
       submenu: [
@@ -57,8 +57,8 @@ export function createMenuTemplate (app, actions) {
     {
       label: 'Window',
       submenu: [
-        {role: 'minimize'},
-        {role: 'close'}
+        { role: 'minimize' },
+        { role: 'close' }
       ]
     }
   ]
@@ -67,25 +67,25 @@ export function createMenuTemplate (app, actions) {
     template.unshift({
       label: app.getName(),
       submenu: [
-        {role: 'about'},
-        {type: 'separator'},
-        {role: 'services', submenu: []},
-        {type: 'separator'},
-        {role: 'hide'},
-        {role: 'hideothers'},
-        {role: 'unhide'},
-        {type: 'separator'},
-        {role: 'quit'}
+        { role: 'about' },
+        { type: 'separator' },
+        { role: 'services', submenu: [] },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'hideothers' },
+        { role: 'unhide' },
+        { type: 'separator' },
+        { role: 'quit' }
       ]
     })
 
     // Window menu
     template[4].submenu = [
-      {role: 'close'},
-      {role: 'minimize'},
-      {role: 'zoom'},
-      {type: 'separator'},
-      {role: 'front'}
+      { role: 'close' },
+      { role: 'minimize' },
+      { role: 'zoom' },
+      { type: 'separator' },
+      { role: 'front' }
     ]
   }
 

@@ -5,9 +5,9 @@
 </template>
 
 <script>
-  export default {
-    name: 'ffmpeg-gui'
-  }
+export default {
+  name: 'ffmpeg-gui'
+}
 </script>
 
 <style lang="scss">
