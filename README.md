@@ -1,25 +1,19 @@
-# ffmpeg-gui
+# ffEdit
 
-> FFMPEG GUI
+> Minimal visual editor for ffmpeg
 
-#### Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:9080
-npm run dev
-
-# build electron application for production
-npm run build
+![ffEdit](./screen_shots/ffedit_crop.jpg)
 
 
-# lint all JS/Vue component files in `src/`
-npm run lint
+## Features
 
-```
+- Trim start / end of videos
+- Crop videos to output aspect ratio
+- Automatically generate video poster images
+- Configure ffmpeg flags for poster and video outputs
+- Batch encoding
 
----
 
-This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[8fae476](https://github.com/SimulatedGREG/electron-vue/tree/8fae4763e9d225d3691b627e83b9e09b56f6c935) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
+## Requirements
+
+- System ffmpeg (4.x)

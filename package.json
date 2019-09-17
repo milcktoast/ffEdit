@@ -2,8 +2,8 @@
   "name": "ffEdit",
   "version": "0.0.1",
   "author": "Jay Weeks <jay.patrick.weeks@gmail.com>",
-  "description": "GUI for ffmpeg",
-  "license": null,
+  "description": "Minimal visual editor for ffmpeg",
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
