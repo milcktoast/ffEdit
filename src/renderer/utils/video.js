@@ -74,7 +74,7 @@ export function createEncodeStream (outputTarget, output, video) {
       inputArgs.push('-t', `${trim.duration}`)
       break
     case 'poster':
-      inputArgs.push('-vframes', '1')
+      outputArgs.push('-vframes', '1')
       break
   }
 
