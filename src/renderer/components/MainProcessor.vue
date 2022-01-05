@@ -20,6 +20,7 @@
       :selectToVideo="selectToVideo"
       :removeSelectedVideos="removeSelectedVideos"
       :createVideoItem="createVideoItem"
+      :setOutputSize="setOutputSize"
       :videos="videos" />
     <video-editor class="main-processor__video-editor"
       :editMode="editMode"
@@ -191,6 +192,18 @@ export default {
       let video = document.createElement('video')
       video.src = `file://${src}`
       return video
+    },
+
+    setOutputSize (video) {
+      let { output } = this
+      let { element, size } = video
+
+      loadVideo(element.src).then(() => {
+        output.size = {
+          width: size.width,
+          height: size.height
+        }
+      })
     },
 
     updateFilePath ({ fileName }) {

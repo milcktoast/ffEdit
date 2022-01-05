@@ -30,6 +30,7 @@ export default {
     selectToVideo: Function,
     activeVideoIndex: Number,
     createVideoItem: Function,
+    setOutputSize: Function,
     videos: Array
   },
 
@@ -47,7 +48,8 @@ export default {
     handleDrop (event) {
       let { map } = Array.prototype
       let { files } = event.dataTransfer
-      let startIndex = this.videos.length
+      let { videos } = this
+      let startIndex = videos.length
 
       let nextVideos = map.call(files, (file, i) => {
         let { path, type } = file
@@ -82,7 +84,8 @@ export default {
 
       event.preventDefault()
       this.willDropVideos = false
-      this.videos.push(...nextVideos)
+      if (startIndex === 0) this.setOutputSize(nextVideos[0])
+      videos.push(...nextVideos)
     },
 
     clickVideoItem (video, index, event) {
