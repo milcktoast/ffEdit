@@ -33,6 +33,7 @@
             v-model="output.video.format">
             <option value="mp4">mp4</option>
             <option value="webm">webm</option>
+            <option value="gif">gif</option>
           </select>
           <input type="checkbox" v-model="output.video.enabled" />
         </label>
